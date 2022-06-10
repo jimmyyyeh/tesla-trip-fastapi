@@ -2,7 +2,18 @@
 fastapi==0.78.0
 uvicorn==0.17.6
 python-multipart==0.0.5
-pydantic==4.0.2
+fastapi-mail==1.0.9
+pydantic==1.9.1
 
 # db
 sqlalchemy==1.4.37
+pymysql==1.0.2
+
+# redis
+redis==3.0.1
+hiredis==1.0.0
+
+# auth
+bcrypt==3.2.2
+python-jose==3.3.0
+passlib==1.7.4
