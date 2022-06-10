@@ -2,6 +2,7 @@
 fastapi==0.78.0
 uvicorn==0.17.6
 python-multipart==0.0.5
+pydantic==4.0.2
 
 # db
 sqlalchemy==1.4.37
