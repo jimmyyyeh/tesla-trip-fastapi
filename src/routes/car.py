@@ -16,6 +16,7 @@
 """
 
 from fastapi import APIRouter
+from utils.payload_schema import CreateCar, UpdateCar
 
 router = APIRouter(prefix='/car', tags=['car'])
 
@@ -27,13 +28,13 @@ def get_car(car_id: int = None):
 
 
 @router.post('/')
-def create_car():
-    ...
+def create_car(car_info: CreateCar):
+    return ''
 
 
 @router.put('/{car_id}')
-def update_car(car_id: int):
-    ...
+def update_car(car_id: int, car_info: UpdateCar):
+    return ''
 
 
 @router.delete('/{car_id}')

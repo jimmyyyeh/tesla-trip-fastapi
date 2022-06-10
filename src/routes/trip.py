@@ -16,6 +16,7 @@
 """
 
 from fastapi import APIRouter
+from utils.payload_schema import CreateTrip
 
 router = APIRouter(prefix='/trip', tags=['trip'])
 
@@ -26,5 +27,5 @@ def get_trip():
 
 
 @router.post('/')
-def create_trip():
+def create_trip(trip: CreateTrip):
     ...

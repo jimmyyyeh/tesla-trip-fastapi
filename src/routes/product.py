@@ -16,6 +16,7 @@
 """
 
 from fastapi import APIRouter
+from utils.payload_schema import CreateProduct, UpdateProduct
 
 router = APIRouter(prefix='/product', tags=['product'])
 
@@ -27,12 +28,12 @@ def get_product(product_id: int = None):
 
 
 @router.post('/')
-def create_product():
+def create_product(product: CreateProduct):
     ...
 
 
 @router.put('/{product_id}')
-def update_product(product_id: int):
+def update_product(product_id: int, product: UpdateProduct):
     ...
 
 
