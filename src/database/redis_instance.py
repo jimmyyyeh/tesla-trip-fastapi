@@ -15,17 +15,13 @@
     God Bless,Never Bug
 """
 
-from fastapi import APIRouter
-from utils.payload_schemas import EncodeProduct
+import redis
+from config import Config
 
-router = APIRouter(prefix='/qrcode', tags=['qrcode'])
-
-
-@router.get('/product/<string:token>')
-def decode_product(token: str):
-    ...
-
-
-@router.post('/product')
-def encode_product(product: EncodeProduct):
-    ...
+redis_instance = redis.StrictRedis(
+    host=Config.REDIS_HOST,
+    password=Config.REDIS_PASSWORD,
+    port=Config.REDIS_PORT,
+    charset='utf-8',
+    decode_responses=True,
+)

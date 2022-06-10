@@ -16,7 +16,7 @@
 """
 
 from fastapi import APIRouter
-from utils.payload_schema import CreateCar, UpdateCar
+from utils.payload_schemas import CreateCar, UpdateCar
 
 router = APIRouter(prefix='/car', tags=['car'])
 

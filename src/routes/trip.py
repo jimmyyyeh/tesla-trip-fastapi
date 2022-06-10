@@ -16,7 +16,7 @@
 """
 
 from fastapi import APIRouter
-from utils.payload_schema import CreateTrip
+from utils.payload_schemas import CreateTrip
 
 router = APIRouter(prefix='/trip', tags=['trip'])
 

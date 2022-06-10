@@ -15,17 +15,12 @@
     God Bless,Never Bug
 """
 
-from fastapi import APIRouter
-from utils.payload_schemas import EncodeProduct
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from config import Config
 
-router = APIRouter(prefix='/qrcode', tags=['qrcode'])
+engine = create_engine(url=Config.SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-@router.get('/product/<string:token>')
-def decode_product(token: str):
-    ...
-
-
-@router.post('/product')
-def encode_product(product: EncodeProduct):
-    ...
+Base = declarative_base()

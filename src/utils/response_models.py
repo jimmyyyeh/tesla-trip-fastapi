@@ -14,18 +14,32 @@
         ┗┻┛    ┗┻┛
     God Bless,Never Bug
 """
+from typing import Union
+from datetime import date
 
-from fastapi import APIRouter
-from utils.payload_schemas import EncodeProduct
-
-router = APIRouter(prefix='/qrcode', tags=['qrcode'])
+from pydantic import BaseModel
 
 
-@router.get('/product/<string:token>')
-def decode_product(token: str):
+class UserBase(BaseModel):
+    id: int
+    username: str
+    nickname: str
+    birthday: date
+    sex: int
+    email: str
+    point: int
+    is_verified: bool
+    role: int
+    charger_id: Union[int, None]
+
+    class Config:
+        orm_mode = True
+
+
+class SignUp(UserBase):
     ...
 
 
-@router.post('/product')
-def encode_product(product: EncodeProduct):
-    ...
+class SignIn(UserBase):
+    access_token: str
+    token_type: str

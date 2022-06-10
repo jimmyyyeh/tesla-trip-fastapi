@@ -16,7 +16,7 @@
 """
 
 from fastapi import APIRouter
-from utils.payload_schema import CreateProduct, UpdateProduct
+from utils.payload_schemas import CreateProduct, UpdateProduct
 
 router = APIRouter(prefix='/product', tags=['product'])
 

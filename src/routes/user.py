@@ -15,9 +15,14 @@
     God Bless,Never Bug
 """
 
-from fastapi import APIRouter
-from utils.payload_schema import Verify, ResendVerify, SignIn, SignUp, UpdateProfile, RefreshToken, ResetPassword, \
+from fastapi import APIRouter, Depends, BackgroundTasks
+from sqlalchemy.orm import Session
+
+from core.user_handler import UserHandler
+from database.crud import CRUD
+from utils.payload_schemas import Verify, ResendVerify, SignIn, SignUp, UpdateProfile, RefreshToken, ResetPassword, \
     RequestResetPassword
+from utils import response_models
 
 router = APIRouter(tags=['user'])
 
@@ -32,14 +37,23 @@ def resend_verify(payload: ResendVerify):
     ...
 
 
-@router.post('/sign-in')
-def sign_in(payload: SignIn):
-    ...
+@router.post('/sign-in', response_model=response_models.SignIn)
+def sign_in(payload: SignIn, db: Session = Depends(CRUD.get_db)):
+    result = UserHandler.sign_in(
+        db=db,
+        payload=payload
+    )
+    return result
 
 
-@router.post('/sign-up')
-def sign_up(payload: SignUp):
-    ...
+@router.post('/sign-up', response_model=response_models.SignUp)
+async def sign_up(payload: SignUp, background_tasks: BackgroundTasks, db: Session = Depends(CRUD.get_db)):
+    result = UserHandler.sign_up(
+        db=db,
+        payload=payload
+    )
+    background_tasks.add_task(func=UserHandler.send_verify_mail, email=result['email'], id_=result['id'])
+    return result
 
 
 @router.post('/refresh-token')

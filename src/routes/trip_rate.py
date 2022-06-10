@@ -16,7 +16,7 @@
 """
 
 from fastapi import APIRouter
-from utils.payload_schema import UpdateTripRate
+from utils.payload_schemas import UpdateTripRate
 
 router = APIRouter(prefix='/trip-rate', tags=['trip rate'])
 
