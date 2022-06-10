@@ -15,11 +15,16 @@
     God Bless,Never Bug
 """
 
-from routes.administrative_district import *
-from routes.car import *
-from routes.charger import *
-from routes.product import *
-from routes.qrcode import *
-from routes.trip import *
-from routes.trip_rate import *
-from routes.user import *
+from fastapi import APIRouter
+
+router = APIRouter(prefix='/qrcode', tags=['qrcode'])
+
+
+@router.get('/product/<string:token>')
+def decode_product(token: str):
+    ...
+
+
+@router.post('/product')
+def encode_product():
+    ...
