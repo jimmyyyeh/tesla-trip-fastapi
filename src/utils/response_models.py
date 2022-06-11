@@ -99,3 +99,15 @@ class Product(BaseModel):
     stock: int
     point: int
     is_launched: bool
+
+
+### qrcode
+class DecodeProduct(BaseModel):
+    id: int
+    name: str
+    user_id: int
+    point: int
+
+
+class EncodeProduct(BaseModel):
+    image: str
