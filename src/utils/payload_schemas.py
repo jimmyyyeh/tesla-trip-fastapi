@@ -107,7 +107,7 @@ class EncodeProduct(BaseModel):
 
 class CreateProduct(BaseModel):
     name: str
-    stock: str
+    stock: int
     point: int
     is_launched: bool
 

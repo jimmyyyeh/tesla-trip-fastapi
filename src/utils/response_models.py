@@ -24,6 +24,7 @@ from pydantic import BaseModel, EmailStr
 class SuccessOrNot(BaseModel):
     success: bool
 
+
 ### user ###
 class UserBase(BaseModel):
     id: int
@@ -49,6 +50,7 @@ class SignIn(UserBase):
     access_token: str
     token_type: str
 
+
 ### administrative district ###
 
 class AdministrativeDistrict(BaseModel):
@@ -73,16 +75,27 @@ class SuperCharger(BaseModel):
 ### car
 class Car(BaseModel):
     id: int
-    car: Optional[str]= None
+    car: Optional[str] = None
     model: str
     spec: str
     manufacture_date: date
     has_image: bool
+
 
 class CarModel(BaseModel):
     id: int
     model: str
     spec: str
 
+
 class CarDeductPoint(BaseModel):
     total: int
+
+
+### product
+class Product(BaseModel):
+    id: int
+    name: str
+    stock: int
+    point: int
+    is_launched: bool

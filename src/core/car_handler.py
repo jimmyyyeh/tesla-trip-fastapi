@@ -138,7 +138,7 @@ class CarHandler:
     def delete_car(cls, db: Session, user: dict, car_id: id):
         car, trips, trip_rates = cls._get_delete_car_info(db=db, user_id=user['id'], car_id=car_id)
         if trip_rates:
-            trip_rates.delete()
+            trip_rates.delate()
         if trips:
             trips.delete()
         car.delete()

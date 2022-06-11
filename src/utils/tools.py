@@ -15,17 +15,19 @@
     God Bless,Never Bug
 """
 
+import math
 from datetime import datetime, date
 
 
 class Tools:
     @staticmethod
-    def make_pager(page, per_page, objs):
+    def make_pager(db, page, per_page, model):
+        total = db.query(model.id).count()
         return {
             'page': page,
             'per_page': per_page,
-            'total': objs.total,
-            'pages': objs.pages,
+            'total': total,
+            'pages': math.ceil(total / per_page),
         }
 
     @staticmethod

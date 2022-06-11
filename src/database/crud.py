@@ -22,7 +22,8 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from database.database import SessionLocal
-from database.models import User, AdministrativeDistrict, SuperCharger, Car, CarModel, PointLog, Trip, TripRate
+from database.models import User, AdministrativeDistrict, SuperCharger, Car, CarModel, PointLog, Trip, TripRate, \
+    Product, RedeemLog
 from utils.auth_tools import AuthTools
 
 
@@ -128,7 +129,7 @@ class CRUD:
         return car
 
     @staticmethod
-    def get_car_models(db:Session, model: Optional[str]=None, spec: Optional[str]=None):
+    def get_car_models(db: Session, model: Optional[str] = None, spec: Optional[str] = None):
         filter_ = list()
         if model:
             filter_.append(CarModel.model == model)
@@ -139,10 +140,10 @@ class CRUD:
         )
         return car_models
 
-    ### point ###
+    ### log ###
 
     @staticmethod
-    def create_point_log(db:Session, user_id: int, point: int, change:int, type_:int):
+    def create_point_log(db: Session, user_id: int, point: int, change: int, type_: int):
         point_log = PointLog(
             user_id=user_id,
             point=point,
@@ -150,19 +151,109 @@ class CRUD:
             type=type_
         )
         db.add(point_log)
-        db.commit()
+
+    @staticmethod
+    def create_redeem_log(db: Session, seller_id:int, buyer_id:int, product_id:int):
+        redeem_log = RedeemLog(
+            seller_id=seller_id,
+            buyer_id=buyer_id,
+            product_id=product_id,
+        )
+        db.add(redeem_log)
 
     ### trip ###
     @staticmethod
-    def get_trips(db:Session, car_id: int):
+    def get_trips(db: Session, car_id: int):
         trips = db.query(Trip).filter(
             Trip.car_id == car_id
         )
         return trips
 
     @staticmethod
-    def get_trip_rates(db:Session, trip_ids=set):
+    def get_trip_rates(db: Session, trip_ids=set):
         trip_rates = db.query(TripRate).filter(
             TripRate.trip_id.in_(trip_ids)
         )
         return trip_rates
+
+    ### product ###
+    @staticmethod
+    def get_product(db: Session, product_id: int, charger_id: Optional[int]=None):
+        filter_ = [Product.id == product_id]
+        if charger_id:
+            filter_.append(Product.charger_id == charger_id)
+        product = db.query(Product).filter(
+            *filter_
+        )
+        return product
+
+    @staticmethod
+    def get_products(db: Session, product_id: int, is_self: bool, charger_id: int, name: str, user: dict, page: int,
+                     per_page: int):
+        filter_ = []
+        if product_id:
+            filter_.append(Product.id == product_id)
+        if is_self:
+            filter_.append(SuperCharger.id == user['charger_id'])
+        if charger_id:
+            filter_.append(SuperCharger.id == charger_id)
+        if name:
+            filter_.append(Product.name.like(f'%{name}%'))
+        products = db.query(
+            Product.id,
+            Product.name,
+            Product.stock,
+            Product.point,
+            Product.is_launched,
+            SuperCharger.name.label('charger')
+        ).join(
+            SuperCharger, SuperCharger.id == Product.charger_id
+        ).filter(
+            *filter_
+        ).limit(
+            per_page
+        ).offset(
+            (page - 1) * per_page
+        ).all()
+        return products
+
+    @staticmethod
+    def create_product(db: Session, user: dict, name: str, stock: int, point: int, is_launched: bool = False):
+        product = Product(
+            name=name,
+            stock=stock,
+            point=point,
+            is_launched=is_launched,
+            charger_id=user['charger_id'],
+        )
+        db.add(product)
+        db.commit()
+        return product
+
+    @classmethod
+    def update_product(cls, db: Session, product_id: int, user: dict, name: Optional[str] = None,
+                       stock: Optional[int] = None, point: Optional[int] = None, is_launched: Optional[bool] = False):
+        product = cls.get_product(db=db, product_id=product_id, charger_id=user['charger_id']).first()
+        if not product:
+            # TODO raise
+            ...
+        if name:
+            product.name = name
+        if stock:
+            product.stock = stock
+        if point:
+            product.point = point
+        if is_launched:
+            product.is_launched = is_launched
+        db.add(product)
+        db.commit()
+        return product
+
+    @classmethod
+    def delete_product(cls, db: Session, product_id: int, user: dict):
+        product = cls.get_product(db=db, product_id=product_id, charger_id=user['charger_id'])
+        if not product:
+            # TODO raise
+            ...
+        product.delete()
+        db.commit()
