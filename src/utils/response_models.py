@@ -92,7 +92,7 @@ class CarDeductPoint(BaseModel):
     total: int
 
 
-### product
+### product ###
 class Product(BaseModel):
     id: int
     name: str
@@ -101,7 +101,7 @@ class Product(BaseModel):
     is_launched: bool
 
 
-### qrcode
+### qrcode ###
 class DecodeProduct(BaseModel):
     id: int
     name: str
@@ -111,3 +111,23 @@ class DecodeProduct(BaseModel):
 
 class EncodeProduct(BaseModel):
     image: str
+
+
+### trip ###
+class Trip(BaseModel):
+    id: int
+    mileage: int
+    consumption: Union[int, float]
+    total: Union[int, float]
+    start: str
+    end: str
+    start_battery_level: int
+    end_battery_level: int
+    car: str
+    trip_date: date
+    is_rate: bool
+    is_charge: bool
+    trip_rate_count: Optional[int] = None
+    charge: Optional[int] = None
+    charger: Optional[str] = None
+    fee: Optional[int] = None

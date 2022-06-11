@@ -128,7 +128,7 @@ class CarHandler:
 
     @classmethod
     def _get_delete_car_info(cls, db: Session, user_id: int, car_id: int):
-        trips = CRUD.get_trips(db=db, car_id=car_id)
+        trips = CRUD.get_user_trips(db=db, car_id=car_id)
         trip_ids = {trip.id for trip in trips}
         trip_rates = CRUD.get_trip_rates(db=db, trip_ids=trip_ids)
         car = CRUD.get_car(db=db, user_id=user_id, car_id=car_id)

@@ -15,17 +15,46 @@
     God Bless,Never Bug
 """
 
-from fastapi import APIRouter
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from core.trip_handler import TripHandler
+from database.crud import CRUD
+from utils import response_models
+from utils.auth_tools import AuthTools
 from utils.payload_schemas import CreateTrip
 
 router = APIRouter(prefix='/trip', tags=['trip'])
 
 
-@router.get('/')
-def get_trip():
-    ...
+@router.get('/', response_model=List[response_models.Trip])
+def get_trip(is_my_trip: Optional[bool]=None, page: Optional[int]=1, per_page: Optional[int]=10,
+             charger: Optional[str]=None, start: Optional[str]=None, end: Optional[str]=None,
+             model: Optional[str]=None, spec: Optional[str]=None, user: dict = Depends(AuthTools.verify_auth),
+             db: Session = Depends(CRUD.get_db)):
+    result, pager = TripHandler.get_trips(
+        db=db,
+        user_id=user['id'],
+        is_my_trip=is_my_trip,
+        charger=charger,
+        start=start,
+        end=end,
+        model=model,
+        spec=spec,
+        page=page,
+        per_page=per_page
+    )
+    return result
 
 
-@router.post('/')
-def create_trip(trip: CreateTrip):
-    ...
+@router.post('/', response_model=response_models.SuccessOrNot)
+def create_trip(trips: List[CreateTrip], user: dict = Depends(AuthTools.verify_auth),
+                db: Session = Depends(CRUD.get_db)):
+    result = TripHandler.create_trip(
+        db=db,
+        user_id=user['id'],
+        trips=trips
+    )
+    return {'success': True}

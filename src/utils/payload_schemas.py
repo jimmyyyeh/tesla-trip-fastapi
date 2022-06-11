@@ -21,6 +21,8 @@ from typing import Optional, Union
 from pydantic import BaseModel, validator, EmailStr
 
 
+### user ###
+
 class SignIn(BaseModel):
     username: str
     password: str
@@ -68,6 +70,7 @@ class RefreshToken(BaseModel):
     refresh_token: str
 
 
+### car ###
 class CreateCar(BaseModel):
     model: str
     spec: str
@@ -81,6 +84,7 @@ class UpdateCar(BaseModel):
     manufacture_date: date
 
 
+### trip ###
 class CreateTrip(BaseModel):
     car_id: int
     mileage: int
@@ -101,10 +105,12 @@ class UpdateTripRate(BaseModel):
     trip_id: int
 
 
+### qrcode ###
 class EncodeProduct(BaseModel):
     product_id: int
 
 
+### product ###
 class CreateProduct(BaseModel):
     name: str
     stock: int
