@@ -19,7 +19,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from database.database import SessionLocal
-from database.models import User, AdministrativeDistrict
+from database.models import User, AdministrativeDistrict, SuperCharger
 from utils.auth_tools import AuthTools
 
 
@@ -72,3 +72,8 @@ class CRUD:
     @staticmethod
     def get_administrative_district(db):
         return db.query(AdministrativeDistrict).all()
+
+    ## super charger
+    @staticmethod
+    def get_chargers(db):
+        return db.query(SuperCharger).all()
