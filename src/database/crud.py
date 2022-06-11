@@ -19,7 +19,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from database.database import SessionLocal
-from database.models import User
+from database.models import User, AdministrativeDistrict
 from utils.auth_tools import AuthTools
 
 
@@ -32,6 +32,7 @@ class CRUD:
         finally:
             db.close()
 
+    ### user ###
     @staticmethod
     def get_user_by_id(db: Session, id_: str):
         user = db.query(User).filter(User.id == id_).first()
@@ -66,3 +67,8 @@ class CRUD:
         db.commit()
         # TODO send email
         return user
+
+    ### administrative district  ###
+    @staticmethod
+    def get_administrative_district(db):
+        return db.query(AdministrativeDistrict).all()
