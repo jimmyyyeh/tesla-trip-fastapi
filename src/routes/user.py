@@ -56,11 +56,6 @@ async def sign_up(payload: SignUp, background_tasks: BackgroundTasks, db: Sessio
     return result
 
 
-@router.post('/refresh-token')
-def refresh_token(payload: RefreshToken):
-    ...
-
-
 @router.post('/request-reset-password')
 def request_reset_password(payload: RequestResetPassword):
     ...
