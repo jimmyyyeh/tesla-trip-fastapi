@@ -14,10 +14,11 @@
         ┗┻┛    ┗┻┛
     God Bless,Never Bug
 """
-from typing import Union, Optional, Dict
-from datetime import date
 
-from pydantic import BaseModel, EmailStr, constr
+from datetime import date
+from typing import Union, Optional
+
+from pydantic import BaseModel, EmailStr
 
 
 class SuccessOrNot(BaseModel):
@@ -67,3 +68,21 @@ class SuperCharger(BaseModel):
     park_fee: Optional[str] = None
     charger_fee: Optional[str] = None
     version: Optional[str] = None
+
+
+### car
+class Car(BaseModel):
+    id: int
+    car: Optional[str]= None
+    model: str
+    spec: str
+    manufacture_date: date
+    has_image: bool
+
+class CarModel(BaseModel):
+    id: int
+    model: str
+    spec: str
+
+class CarDeductPoint(BaseModel):
+    total: int

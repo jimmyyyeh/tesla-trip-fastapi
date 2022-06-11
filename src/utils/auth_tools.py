@@ -22,6 +22,7 @@ from jose.exceptions import JWTError
 from passlib.context import CryptContext
 
 from config import Config
+from utils.pattern import Pattern
 
 
 class AuthTools:
@@ -49,7 +50,7 @@ class AuthTools:
 
     @classmethod
     def verify_auth(cls, authorization: str = Header()):
-        token = authorization.split(' ')[1]
+        token = Pattern.BEARER_TOKEN.search(authorization).group(2)
         try:
             user = jwt.decode(token=token, key=Config.SALT)
             return user

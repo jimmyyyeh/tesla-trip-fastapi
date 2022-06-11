@@ -42,3 +42,7 @@ class Tools:
         month = date_.month
         season = int(month % 3.1 + 1)
         return f'{year}Q{season}'
+
+    @staticmethod
+    def get_deduct_point(trips, trip_rates):
+        return trips.count() + trip_rates.count() * 2

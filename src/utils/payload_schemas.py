@@ -15,8 +15,10 @@
     God Bless,Never Bug
 """
 
+from datetime import date
 from typing import Optional, Union
-from pydantic import BaseModel, constr, validator, EmailStr
+
+from pydantic import BaseModel, validator, EmailStr
 
 
 class SignIn(BaseModel):
@@ -69,14 +71,14 @@ class RefreshToken(BaseModel):
 class CreateCar(BaseModel):
     model: str
     spec: str
-    manufacture_date: str
+    manufacture_date: date
     file: Optional[str] = None
 
 
 class UpdateCar(BaseModel):
     model: str
     spec: str
-    manufacture_date: str
+    manufacture_date: date
 
 
 class CreateTrip(BaseModel):
@@ -92,7 +94,7 @@ class CreateTrip(BaseModel):
     charger_id: Optional[int] = None
     charge: Optional[int] = None
     fee: Optional[int] = None
-    trip_date: str
+    trip_date: date
 
 
 class UpdateTripRate(BaseModel):
