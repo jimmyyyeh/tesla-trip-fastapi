@@ -14,7 +14,7 @@
         ┗┻┛    ┗┻┛
     God Bless,Never Bug
 """
-
+from pydantic import EmailStr
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -33,7 +33,12 @@ class CRUD:
             db.close()
 
     @staticmethod
-    def get_user(db: Session, username: str, email: str = None):
+    def get_user_by_id(db: Session, id_: str):
+        user = db.query(User).filter(User.id == id_).first()
+        return user
+
+    @staticmethod
+    def get_user_by_username(db: Session, username: str, email: EmailStr = None):
         if email:
             conditions = [or_(User.username == username,
                               User.email == email)]
@@ -43,7 +48,12 @@ class CRUD:
         return user
 
     @staticmethod
-    def create_user(db: Session, username: str, password: str, nickname: str, email: str, birthday: str, sex: int):
+    def get_user_by_email(db: Session, email: EmailStr):
+        user = db.query(User).filter(User.email == email).first()
+        return user
+
+    @staticmethod
+    def create_user(db: Session, username: str, password: str, nickname: str, email: EmailStr, birthday: str, sex: int):
         user = User(
             username=username,
             password=AuthTools.get_password_hash(password=password),

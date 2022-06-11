@@ -16,7 +16,7 @@
 """
 
 from typing import Optional, Union
-from pydantic import BaseModel, constr, validator
+from pydantic import BaseModel, constr, validator, EmailStr
 
 
 class SignIn(BaseModel):
@@ -28,7 +28,7 @@ class SignUp(BaseModel):
     username: str
     password: str
     nickname: Optional[str] = None
-    email: constr(regex=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)')
+    email: EmailStr
     birthday: str
     sex: int
 
@@ -48,7 +48,7 @@ class ResendVerify(BaseModel):
 
 
 class RequestResetPassword(BaseModel):
-    email: constr(regex=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)')
+    email: EmailStr
 
 
 class ResetPassword(BaseModel):
@@ -58,7 +58,7 @@ class ResetPassword(BaseModel):
 
 
 class UpdateProfile(BaseModel):
-    email: Optional[constr(regex=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)')] = None
+    email: Optional[EmailStr] = None
     nickname: Optional[str] = None
 
 

@@ -17,8 +17,11 @@
 from typing import Union
 from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
+
+class SuccessOrNot(BaseModel):
+    success: bool
 
 class UserBase(BaseModel):
     id: int
@@ -26,7 +29,7 @@ class UserBase(BaseModel):
     nickname: str
     birthday: date
     sex: int
-    email: str
+    email: EmailStr
     point: int
     is_verified: bool
     role: int
