@@ -25,7 +25,7 @@ from config import Config
 from database.db_handler import DBHandler
 from utils.auth_tools import AuthTools
 from utils.payload_schemas import SignIn, SignUp
-from utils.redis_handler import RedisHandler
+from database.redis_handler import RedisHandler
 from utils.tools import Tools
 
 

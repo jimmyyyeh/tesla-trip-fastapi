@@ -17,7 +17,7 @@
 
 import json
 
-from database.redis_instance import redis_instance
+from database.redis_manager import redis_instance
 
 
 class RedisKey:

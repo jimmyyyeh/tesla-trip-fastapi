@@ -21,7 +21,7 @@ from pydantic import EmailStr
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 
-from database.database import SessionLocal
+from database.db_manager import SessionLocal
 from database.models import User, AdministrativeDistrict, SuperCharger, Car, CarModel, PointLog, Trip, TripRate, \
     Product, RedeemLog
 from utils.auth_tools import AuthTools

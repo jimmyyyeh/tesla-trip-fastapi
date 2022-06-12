@@ -24,7 +24,7 @@ from sqlalchemy.orm import Session
 
 from config import Config
 from database.db_handler import DBHandler
-from utils.redis_handler import RedisHandler
+from database.redis_handler import RedisHandler
 
 
 class QRCodeHandler:

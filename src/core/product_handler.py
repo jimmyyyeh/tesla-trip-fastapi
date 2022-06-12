@@ -21,7 +21,7 @@ from sqlalchemy.orm import Session
 from database.db_handler import DBHandler
 from database.models import Product
 from utils.const import Const
-from utils.redis_handler import RedisHandler
+from database.redis_handler import RedisHandler
 from utils.tools import Tools
 
 
