@@ -21,11 +21,12 @@ from sqlalchemy.orm import Session
 from core.user_handler import UserHandler
 from database.crud import CRUD
 from utils import response_models
-from utils.auth_tools import AuthTools
+from utils.auth_tools import AuthTools, AuthValidator
 from utils.payload_schemas import Verify, ResendVerify, SignIn, SignUp, UpdateProfile, ResetPassword, \
     RequestResetPassword
 
 router = APIRouter(tags=['user'])
+general_auth = AuthValidator()
 
 
 @router.post('/verify', response_model=response_models.SuccessOrNot)
@@ -90,13 +91,13 @@ def reset_password(payload: ResetPassword, db: Session = Depends(CRUD.get_db)):
 
 
 @router.get('/profile', response_model=response_models.UserBase)
-def get_profile(user: dict = Depends(AuthTools.verify_auth)):
+def get_profile(user: dict = Depends(general_auth)):
     return user
 
 
 @router.put('/profile', response_model=response_models.SignIn)
 def update_profile(profile: UpdateProfile,
-                   user: dict = Depends(AuthTools.verify_auth),
+                   user: dict = Depends(general_auth),
                    db: Session = Depends(CRUD.get_db)):
     result = UserHandler.update_profile(
         db=db,

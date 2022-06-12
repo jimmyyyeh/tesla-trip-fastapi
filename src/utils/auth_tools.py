@@ -48,11 +48,18 @@ class AuthTools:
     def get_password_hash(cls, password):
         return cls._PWD_CONTEXT.hash(password)
 
-    @classmethod
-    def verify_auth(cls, authorization: str = Header()):
+
+class AuthValidator:
+    def __init__(self, roles=None):
+        self.roles = roles or list()
+
+    def __call__(self, authorization: str = Header()):
         token = Pattern.BEARER_TOKEN.search(authorization).group(2)
         try:
             user = jwt.decode(token=token, key=Config.SALT)
+            if self.roles and user['role'] not in self.roles:
+                # TODO raise
+                ...
             return user
         except JWTError as e:
             # TODO raise

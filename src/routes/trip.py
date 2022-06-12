@@ -23,16 +23,17 @@ from sqlalchemy.orm import Session
 from core.trip_handler import TripHandler
 from database.crud import CRUD
 from utils import response_models
-from utils.auth_tools import AuthTools
+from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateTrip
 
 router = APIRouter(prefix='/trip', tags=['trip'])
+general_auth = AuthValidator()
 
 
 @router.get('/', response_model=List[response_models.Trip])
-def get_trip(is_my_trip: Optional[bool]=None, page: Optional[int]=1, per_page: Optional[int]=10,
-             charger: Optional[str]=None, start: Optional[str]=None, end: Optional[str]=None,
-             model: Optional[str]=None, spec: Optional[str]=None, user: dict = Depends(AuthTools.verify_auth),
+def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
+             charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
+             model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
              db: Session = Depends(CRUD.get_db)):
     result, pager = TripHandler.get_trips(
         db=db,
@@ -50,7 +51,7 @@ def get_trip(is_my_trip: Optional[bool]=None, page: Optional[int]=1, per_page: O
 
 
 @router.post('/', response_model=response_models.SuccessOrNot)
-def create_trip(trips: List[CreateTrip], user: dict = Depends(AuthTools.verify_auth),
+def create_trip(trips: List[CreateTrip], user: dict = Depends(general_auth),
                 db: Session = Depends(CRUD.get_db)):
     result = TripHandler.create_trip(
         db=db,

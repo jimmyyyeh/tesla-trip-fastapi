@@ -23,14 +23,14 @@ from sqlalchemy.orm import Session
 from core.car_handler import CarHandler
 from database.crud import CRUD
 from utils import response_models
-from utils.auth_tools import AuthTools
+from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateCar, UpdateCar
 
 router = APIRouter(prefix='/car', tags=['car'])
-
+general_auth = AuthValidator()
 
 @router.get('/car-model', response_model=response_models.CarModel)
-def get_car_model(user: dict = Depends(AuthTools.verify_auth), db: Session = Depends(CRUD.get_db)):
+def get_car_model(user: dict = Depends(general_auth), db: Session = Depends(CRUD.get_db)):
     result = CarHandler.get_car_models(
         db=db
     )
@@ -39,13 +39,13 @@ def get_car_model(user: dict = Depends(AuthTools.verify_auth), db: Session = Dep
 
 @router.get('/{car_id}', response_model=List[response_models.Car])
 @router.get('/', response_model=List[response_models.Car])
-def get_car(car_id: int = None, user: dict = Depends(AuthTools.verify_auth), db: Session = Depends(CRUD.get_db)):
+def get_car(car_id: int = None, user: dict = Depends(general_auth), db: Session = Depends(CRUD.get_db)):
     result = CarHandler.get_cars(db=db, user_id=user['id'], car_id=car_id)
     return result
 
 
 @router.post('/', response_model=response_models.Car)
-def create_car(car_info: CreateCar, user: dict = Depends(AuthTools.verify_auth), db: Session = Depends(CRUD.get_db)):
+def create_car(car_info: CreateCar, user: dict = Depends(general_auth), db: Session = Depends(CRUD.get_db)):
     result = CarHandler.create_car(
         db=db,
         user_id=user['id'],
@@ -58,7 +58,7 @@ def create_car(car_info: CreateCar, user: dict = Depends(AuthTools.verify_auth),
 
 
 @router.put('/{car_id}', response_model=response_models.Car)
-def update_car(car_id: int, car_info: UpdateCar, user: dict = Depends(AuthTools.verify_auth),
+def update_car(car_id: int, car_info: UpdateCar, user: dict = Depends(general_auth),
                db: Session = Depends(CRUD.get_db)):
     result = CarHandler.update_car(
         db=db,
@@ -72,7 +72,7 @@ def update_car(car_id: int, car_info: UpdateCar, user: dict = Depends(AuthTools.
 
 
 @router.delete('/{car_id}', response_model=response_models.SuccessOrNot)
-def delete_car(car_id: int, user: dict = Depends(AuthTools.verify_auth), db: Session = Depends(CRUD.get_db)):
+def delete_car(car_id: int, user: dict = Depends(general_auth), db: Session = Depends(CRUD.get_db)):
     result = CarHandler.delete_car(
         db=db,
         user=user,
@@ -82,6 +82,6 @@ def delete_car(car_id: int, user: dict = Depends(AuthTools.verify_auth), db: Ses
 
 
 @router.get('/deduct-point/{car_id}', response_model=response_models.CarDeductPoint)
-def get_car_deduct_point(car_id: int, user: dict = Depends(AuthTools.verify_auth), db: Session = Depends(CRUD.get_db)):
+def get_car_deduct_point(car_id: int, user: dict = Depends(general_auth), db: Session = Depends(CRUD.get_db)):
     result = CarHandler.get_car_deduct_point(db=db, user=user, car_id=car_id)
     return result
