@@ -18,7 +18,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from database.models import Product
 from utils.const import Const
 from utils.redis_handler import RedisHandler
@@ -29,7 +29,7 @@ class ProductHandler:
     @staticmethod
     def get_products(db: Session, product_id: int, is_self: bool, charger_id: int, name: str, user: dict, page: int,
                      per_page: int):
-        products = CRUD.get_products(
+        products = DBHandler.get_products(
             db=db,
             product_id=product_id,
             is_self=is_self,
@@ -60,7 +60,7 @@ class ProductHandler:
 
     @staticmethod
     def create_product(db: Session, user: dict, name: str, stock: int, point: int, is_launched: Optional[bool] = False):
-        product = CRUD.create_product(
+        product = DBHandler.create_product(
             db=db,
             user=user,
             name=name,
@@ -80,7 +80,7 @@ class ProductHandler:
     @classmethod
     def update_product(cls, db: Session, user: dict, product_id: int, name: Optional[str] = None,
                        stock: Optional[int] = None, point: Optional[int] = None, is_launched: Optional[bool] = False):
-        product = CRUD.update_product(
+        product = DBHandler.update_product(
             db=db,
             product_id=product_id,
             user=user,
@@ -100,7 +100,7 @@ class ProductHandler:
 
     @classmethod
     def delete_product(cls, db: Session, user: dict, product_id: int):
-        CRUD.delete_product(db=db, user=user, product_id=product_id)
+        DBHandler.delete_product(db=db, user=user, product_id=product_id)
         return True
 
     @classmethod
@@ -111,7 +111,7 @@ class ProductHandler:
             ...
         buyer_id = content['user_id']
         product_id = content['id']
-        product = CRUD.get_product(
+        product = DBHandler.get_product(
             db=db,
             product_id=product_id
         ).first()
@@ -124,7 +124,7 @@ class ProductHandler:
         product.stock -= 1
         product_point = content['point']
         seller = user
-        buyer = CRUD.get_user_by_id(
+        buyer = DBHandler.get_user_by_id(
             db=db,
             id_=buyer_id
         )
@@ -134,8 +134,8 @@ class ProductHandler:
             # TODO raise
             ...
         buyer.point -= product_point
-        CRUD.create_redeem_log(db=db, seller_id=seller['id'], buyer_id=buyer_id, product_id=product_id)
-        CRUD.create_point_log(
+        DBHandler.create_redeem_log(db=db, seller_id=seller['id'], buyer_id=buyer_id, product_id=product_id)
+        DBHandler.create_point_log(
             db=db,
             user_id=buyer.id,
             point=origin_point,

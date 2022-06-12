@@ -16,7 +16,7 @@
 """
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from database.models import User
 from utils.const import Const
 
@@ -28,7 +28,7 @@ class TripRateHandler:
         user_origin_point = user.point
         author_origin_point = trip_author.point
         trip_author.point += 1
-        CRUD.create_point_log(
+        DBHandler.create_point_log(
             db=db,
             user_id=trip_author.id,
             point=author_origin_point,
@@ -37,7 +37,7 @@ class TripRateHandler:
         )
         if user != trip_author:
             user.point += 1
-            CRUD.create_point_log(
+            DBHandler.create_point_log(
                 db=db,
                 user_id=user.id,
                 point=user_origin_point,
@@ -49,7 +49,7 @@ class TripRateHandler:
     def _deduct_user_point(db: Session, trip_author: User):
         author_origin_point = trip_author.point
         trip_author.point -= 1
-        CRUD.create_point_log(
+        DBHandler.create_point_log(
             db=db,
             user_id=trip_author.id,
             point=author_origin_point,
@@ -59,16 +59,16 @@ class TripRateHandler:
 
     @classmethod
     def update_user_trip_rate(cls, db: Session, user: dict, trip_id: int):
-        trip = CRUD.get_trip(db=db, trip_id=trip_id)
+        trip = DBHandler.get_trip(db=db, trip_id=trip_id)
 
         if not trip:
             # TODO raise
             ...
-        trip_rater = CRUD.get_user_by_id(db=db, id_=user['id'])
-        trip_author = CRUD.get_user_by_id(db=db, id_=trip.user_id)
-        trip_rate = CRUD.get_trip_rate(db=db, user_id=trip_author.id, trip_id=trip_id)
+        trip_rater = DBHandler.get_user_by_id(db=db, id_=user['id'])
+        trip_author = DBHandler.get_user_by_id(db=db, id_=trip.user_id)
+        trip_rate = DBHandler.get_trip_rate(db=db, user_id=trip_author.id, trip_id=trip_id)
         if not trip_rate.first():
-            CRUD.create_trip_rate(db=db, user_id=user['id'], trip_id=trip_id)
+            DBHandler.create_trip_rate(db=db, user_id=user['id'], trip_id=trip_id)
             cls._rise_user_point(db=db, user=trip_rater, trip_author=trip_author)
         else:
             trip_rate.delete()

@@ -17,13 +17,13 @@
 
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 
 
 class AdministrativeDistrictHandler:
     @staticmethod
     def get_administrative_districts(db: Session):
-        administrative_districts = CRUD.get_administrative_district(
+        administrative_districts = DBHandler.get_administrative_district(
             db=db
         )
         results = dict()

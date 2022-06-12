@@ -21,7 +21,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from core.trip_handler import TripHandler
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateTrip
@@ -34,7 +34,7 @@ general_auth = AuthValidator()
 def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
              charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
              model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
-             db: Session = Depends(CRUD.get_db)):
+             db: Session = Depends(DBHandler.get_db)):
     result, pager = TripHandler.get_trips(
         db=db,
         user_id=user['id'],
@@ -52,7 +52,7 @@ def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_pag
 
 @router.post('/', response_model=response_models.SuccessOrNot)
 def create_trip(trips: List[CreateTrip], user: dict = Depends(general_auth),
-                db: Session = Depends(CRUD.get_db)):
+                db: Session = Depends(DBHandler.get_db)):
     result = TripHandler.create_trip(
         db=db,
         user_id=user['id'],

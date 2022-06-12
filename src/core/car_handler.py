@@ -21,7 +21,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from database.models import Trip, TripRate, User
 from utils.const import Const
 from utils.pattern import Pattern
@@ -32,7 +32,7 @@ class CarHandler:
 
     @classmethod
     def get_cars(cls, db: Session, user_id: int, car_id: int):
-        cars = CRUD.get_cars(db=db, user_id=user_id, car_id=car_id).all()
+        cars = DBHandler.get_cars(db=db, user_id=user_id, car_id=car_id).all()
         results = list()
         for car in cars:
             result = {
@@ -61,12 +61,12 @@ class CarHandler:
 
     @classmethod
     def create_car(cls, db: Session, user_id: int, model: str, spec: str, manufacture_date: date, file: str):
-        car_model = CRUD.get_car_models(db=db, model=model, spec=spec).first()
+        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
 
         if not car_model:
             # TODO raise
             ...
-        car = CRUD.create_car(
+        car = DBHandler.create_car(
             db=db,
             user_id=user_id,
             car_model_id=car_model.id,
@@ -86,11 +86,11 @@ class CarHandler:
 
     @classmethod
     def update_car(cls, db: Session, user_id: int, car_id: int, model: str, spec: str, manufacture_date: date):
-        car = CRUD.get_car(db=db, user_id=user_id, car_id=car_id).first()
+        car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id).first()
         if not car:
             # TODO raise
             ...
-        car_model = CRUD.get_car_models(db=db, model=model, spec=spec).first()
+        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
         if not car_model:
             # TODO raise
             ...
@@ -118,7 +118,7 @@ class CarHandler:
         else:
             user.point -= total_deduct
             deduct_point = user.point
-        CRUD.create_point_log(
+        DBHandler.create_point_log(
             db=db,
             user_id=user.id,
             point=origin_point,
@@ -128,10 +128,10 @@ class CarHandler:
 
     @classmethod
     def _get_delete_car_info(cls, db: Session, user_id: int, car_id: int):
-        trips = CRUD.get_user_trips(db=db, car_id=car_id)
+        trips = DBHandler.get_user_trips(db=db, car_id=car_id)
         trip_ids = {trip.id for trip in trips}
-        trip_rates = CRUD.get_trip_rates(db=db, trip_ids=trip_ids)
-        car = CRUD.get_car(db=db, user_id=user_id, car_id=car_id)
+        trip_rates = DBHandler.get_trip_rates(db=db, trip_ids=trip_ids)
+        car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id)
         return car, trips, trip_rates
 
     @classmethod
@@ -142,14 +142,14 @@ class CarHandler:
         if trips:
             trips.delete()
         car.delete()
-        user = CRUD.get_user_by_id(db=db, id_=user['id'])
+        user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         cls._deduct_point(db=db, user=user, trips=trips, trip_rates=trip_rates)
         db.commit()
         return True
 
     @classmethod
     def get_car_models(cls, db: Session):
-        car_models = CRUD.get_car_models(db=db).all()
+        car_models = DBHandler.get_car_models(db=db).all()
         results = list()
         for car_model in car_models:
             result = {

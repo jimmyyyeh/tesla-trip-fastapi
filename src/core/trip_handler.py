@@ -18,7 +18,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from database.models import Trip
 from utils.payload_schemas import CreateTrip
 from utils.tools import Tools
@@ -28,7 +28,7 @@ class TripHandler:
     @staticmethod
     def get_trips(db: Session, user_id: int, is_my_trip: bool, page: int, per_page: int, charger: str, start: str,
                   end: str, model: str, spec: str):
-        trips = CRUD.get_trips(
+        trips = DBHandler.get_trips(
             db=db,
             user_id=user_id,
             is_my_trip=is_my_trip,
@@ -72,7 +72,7 @@ class TripHandler:
     @staticmethod
     def create_trip(db: Session, user_id: int, trips: List[CreateTrip]):
         for trip in trips:
-            CRUD.create_trip(
+            DBHandler.create_trip(
                 db=db,
                 user_id=user_id,
                 car_id=trip.car_id,

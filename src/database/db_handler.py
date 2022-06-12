@@ -28,7 +28,7 @@ from utils.auth_tools import AuthTools
 from utils.const import Const
 
 
-class CRUD:
+class DBHandler:
     @staticmethod
     def get_db():
         db = SessionLocal()

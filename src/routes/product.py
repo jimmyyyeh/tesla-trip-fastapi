@@ -21,7 +21,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from core.product_handler import ProductHandler
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.const import Const
@@ -41,7 +41,7 @@ def get_product(product_id: int = None,
                 page: Optional[int] = 1,
                 per_page: Optional[int] = 10,
                 user: dict = Depends(general_auth),
-                db: Session = Depends(CRUD.get_db)):
+                db: Session = Depends(DBHandler.get_db)):
     result, pager = ProductHandler.get_products(
         db=db,
         product_id=product_id,
@@ -57,7 +57,7 @@ def get_product(product_id: int = None,
 
 @router.post('/', response_model=response_models.Product)
 def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
-                   db: Session = Depends(CRUD.get_db)):
+                   db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.create_product(
         db=db,
         user=user,
@@ -71,7 +71,7 @@ def create_product(product: CreateProduct, user: dict = Depends(charger_owner_au
 
 @router.put('/{product_id}', response_model=response_models.Product)
 def update_product(product_id: int, product: UpdateProduct, user: dict = Depends(charger_owner_auth),
-                   db: Session = Depends(CRUD.get_db)):
+                   db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.update_product(
         db=db,
         user=user,
@@ -85,7 +85,7 @@ def update_product(product_id: int, product: UpdateProduct, user: dict = Depends
 
 
 @router.delete('/{product_id}', response_model=response_models.SuccessOrNot)
-def delete_product(product_id: int, user: dict = Depends(charger_owner_auth), db: Session = Depends(CRUD.get_db)):
+def delete_product(product_id: int, user: dict = Depends(charger_owner_auth), db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.delete_product(
         db=db,
         user=user,
@@ -95,7 +95,7 @@ def delete_product(product_id: int, user: dict = Depends(charger_owner_auth), db
 
 
 @router.post('/redeem-product/{token}', response_model=response_models.SuccessOrNot)
-def redeem_product(token: str, user: dict = Depends(charger_owner_auth), db: Session = Depends(CRUD.get_db)):
+def redeem_product(token: str, user: dict = Depends(charger_owner_auth), db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.redeem_product(
         db=db,
         user=user,

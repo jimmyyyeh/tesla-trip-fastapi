@@ -23,7 +23,7 @@ from secrets import token_hex
 from sqlalchemy.orm import Session
 
 from config import Config
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from utils.redis_handler import RedisHandler
 
 
@@ -38,7 +38,7 @@ class QRCodeHandler:
 
     @staticmethod
     def encode_product(db: Session, user: dict, product_id: int):
-        product = CRUD.get_product(db=db, product_id=product_id).first()
+        product = DBHandler.get_product(db=db, product_id=product_id).first()
         if not product:
             # TODO raise
             ...

@@ -17,13 +17,13 @@
 
 from sqlalchemy.orm import Session
 
-from database.crud import CRUD
+from database.db_handler import DBHandler
 
 
 class ChargerHandler:
     @staticmethod
     def get_chargers(db: Session):
-        super_chargers = CRUD.get_chargers(db=db)
+        super_chargers = DBHandler.get_chargers(db=db)
         results = list()
         for super_charger in super_chargers:
             result = {

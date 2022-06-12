@@ -22,7 +22,7 @@ from pydantic import EmailStr
 from sqlalchemy.orm import Session
 
 from config import Config
-from database.crud import CRUD
+from database.db_handler import DBHandler
 from utils.auth_tools import AuthTools
 from utils.payload_schemas import SignIn, SignUp
 from utils.redis_handler import RedisHandler
@@ -87,7 +87,7 @@ class UserHandler:
 
     @staticmethod
     def sign_in(db: Session, payload: SignIn):
-        user = CRUD.get_user_by_username(db=db, username=payload.username)
+        user = DBHandler.get_user_by_username(db=db, username=payload.username)
         verified = AuthTools.verify_password(password=payload.password, hashed_password=user.password)
         if not verified:
             # TODO raise
@@ -114,11 +114,11 @@ class UserHandler:
 
     @classmethod
     def sign_up(cls, db: Session, payload: SignUp):
-        user = CRUD.get_user_by_username(db=db, username=payload.username, email=payload.email)
+        user = DBHandler.get_user_by_username(db=db, username=payload.username, email=payload.email)
         if user:
             # TODO raise
             ...
-        user = CRUD.create_user(
+        user = DBHandler.create_user(
             db=db,
             username=payload.username,
             password=payload.password,
@@ -149,7 +149,7 @@ class UserHandler:
         if not id_:
             # TODO raise
             ...
-        user = CRUD.get_user_by_id(
+        user = DBHandler.get_user_by_id(
             db=db,
             id_=id_
         )
@@ -163,7 +163,7 @@ class UserHandler:
 
     @staticmethod
     def resend_verify(db: Session, username: str):
-        user = CRUD.get_user_by_username(db=db, username=username)
+        user = DBHandler.get_user_by_username(db=db, username=username)
         if not user:
             # TODO raise
             ...
@@ -175,7 +175,7 @@ class UserHandler:
 
     @staticmethod
     def request_reset_password(db: Session, email: EmailStr):
-        user = CRUD.get_user_by_email(
+        user = DBHandler.get_user_by_email(
             db=db, email=email
         )
         if not user:
@@ -195,7 +195,7 @@ class UserHandler:
         if not id_:
             # TODO raise
             ...
-        user = CRUD.get_user_by_id(db=db, id_=id_)
+        user = DBHandler.get_user_by_id(db=db, id_=id_)
         if not user:
             # TODO raise
             ...
@@ -209,7 +209,7 @@ class UserHandler:
 
     @staticmethod
     def update_profile(db: Session, user: dict, email:EmailStr, nickname: str):
-        user = CRUD.get_user_by_id(db=db, id_=user['id'])
+        user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         if not user:
             # TODO raise
             ...
