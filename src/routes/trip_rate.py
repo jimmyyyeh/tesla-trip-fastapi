@@ -23,6 +23,7 @@ from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import UpdateTripRate
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/trip-rate', tags=['trip rate'])
 general_auth = AuthValidator()
@@ -36,4 +37,4 @@ def update_trip_rate(payload: UpdateTripRate, user: dict = Depends(general_auth)
         user=user,
         trip_id=payload.trip_id
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)

@@ -15,7 +15,7 @@
     God Bless,Never Bug
 """
 
-from typing import Optional, List
+from typing import Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -26,14 +26,15 @@ from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.const import Const
 from utils.payload_schemas import CreateProduct, UpdateProduct
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/product', tags=['product'])
 general_auth = AuthValidator()
 charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 
 
-@router.get('/{product_id}', response_model=List[response_models.Product])
-@router.get('/', response_model=List[response_models.Product])
+@router.get('/{product_id}', response_model=response_models.Product)
+@router.get('/', response_model=response_models.Product)
 def get_product(product_id: int = None,
                 is_self: Optional[bool] = None,
                 charger_id: Optional[int] = None,
@@ -52,7 +53,7 @@ def get_product(product_id: int = None,
         page=page,
         per_page=per_page
     )
-    return result
+    return ResponseHandler.response(result=result, pager=pager)
 
 
 @router.post('/', response_model=response_models.Product)
@@ -66,7 +67,7 @@ def create_product(product: CreateProduct, user: dict = Depends(charger_owner_au
         point=product.point,
         is_launched=product.is_launched
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.put('/{product_id}', response_model=response_models.Product)
@@ -81,7 +82,7 @@ def update_product(product_id: int, product: UpdateProduct, user: dict = Depends
         point=product.point,
         is_launched=product.is_launched
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.delete('/{product_id}', response_model=response_models.SuccessOrNot)
@@ -91,7 +92,7 @@ def delete_product(product_id: int, user: dict = Depends(charger_owner_auth), db
         user=user,
         product_id=product_id
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/redeem-product/{token}', response_model=response_models.SuccessOrNot)
@@ -101,4 +102,4 @@ def redeem_product(token: str, user: dict = Depends(charger_owner_auth), db: Ses
         user=user,
         token=token
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)

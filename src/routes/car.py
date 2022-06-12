@@ -25,6 +25,7 @@ from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateCar, UpdateCar
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/car', tags=['car'])
 general_auth = AuthValidator()
@@ -34,14 +35,14 @@ def get_car_model(user: dict = Depends(general_auth), db: Session = Depends(DBHa
     result = CarHandler.get_car_models(
         db=db
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
-@router.get('/{car_id}', response_model=List[response_models.Car])
-@router.get('/', response_model=List[response_models.Car])
+@router.get('/{car_id}', response_model=response_models.Car)
+@router.get('/', response_model=response_models.Car)
 def get_car(car_id: int = None, user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = CarHandler.get_cars(db=db, user_id=user['id'], car_id=car_id)
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/', response_model=response_models.Car)
@@ -54,7 +55,7 @@ def create_car(car_info: CreateCar, user: dict = Depends(general_auth), db: Sess
         manufacture_date=car_info.manufacture_date,
         file=car_info.file
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.put('/{car_id}', response_model=response_models.Car)
@@ -68,7 +69,7 @@ def update_car(car_id: int, car_info: UpdateCar, user: dict = Depends(general_au
         spec=car_info.spec,
         manufacture_date=car_info.manufacture_date
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.delete('/{car_id}', response_model=response_models.SuccessOrNot)
@@ -78,10 +79,10 @@ def delete_car(car_id: int, user: dict = Depends(general_auth), db: Session = De
         user=user,
         car_id=car_id
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.get('/deduct-point/{car_id}', response_model=response_models.CarDeductPoint)
 def get_car_deduct_point(car_id: int, user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = CarHandler.get_car_deduct_point(db=db, user=user, car_id=car_id)
-    return result
+    return ResponseHandler.response(result=result)

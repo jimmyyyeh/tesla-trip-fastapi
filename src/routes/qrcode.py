@@ -23,6 +23,7 @@ from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import EncodeProduct
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/qrcode', tags=['qrcode'])
 general_auth = AuthValidator()
@@ -32,7 +33,7 @@ def decode_product(token: str, user: dict = Depends(general_auth)):
     result = QRCodeHandler.decode_product(
         token=token
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/product', response_model=response_models.EncodeProduct)
@@ -43,4 +44,4 @@ def encode_product(payload: EncodeProduct, user: dict = Depends(general_auth),
         user=user,
         product_id=payload.product_id
     )
-    return result
+    return ResponseHandler.response(result=result)

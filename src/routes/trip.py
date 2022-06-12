@@ -25,12 +25,13 @@ from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateTrip
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/trip', tags=['trip'])
 general_auth = AuthValidator()
 
 
-@router.get('/', response_model=List[response_models.Trip])
+@router.get('/', response_model=response_models.Trip)
 def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
              charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
              model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
@@ -47,7 +48,7 @@ def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_pag
         page=page,
         per_page=per_page
     )
-    return result
+    return ResponseHandler.response(result=result, pager=pager)
 
 
 @router.post('/', response_model=response_models.SuccessOrNot)
@@ -58,4 +59,4 @@ def create_trip(trips: List[CreateTrip], user: dict = Depends(general_auth),
         user_id=user['id'],
         trips=trips
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)

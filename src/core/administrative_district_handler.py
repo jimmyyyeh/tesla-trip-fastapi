@@ -29,7 +29,7 @@ class AdministrativeDistrictHandler:
         results = dict()
         for administrative_district in administrative_districts:
             city = administrative_district.city
-            if city not in results:
+            if not results.get(city):
                 results[city] = list()
             result = {
                 'id': administrative_district.id,

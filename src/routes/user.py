@@ -21,9 +21,10 @@ from sqlalchemy.orm import Session
 from core.user_handler import UserHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthTools, AuthValidator
+from utils.auth_tools import AuthValidator
 from utils.payload_schemas import Verify, ResendVerify, SignIn, SignUp, UpdateProfile, ResetPassword, \
     RequestResetPassword
+from utils.response_models import ResponseHandler
 
 router = APIRouter(tags=['user'])
 general_auth = AuthValidator()
@@ -35,7 +36,7 @@ def verify(payload: Verify, db: Session = Depends(DBHandler.get_db)):
         db=db,
         verify_token=payload.token
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/resend-verify', response_model=response_models.SuccessOrNot)
@@ -45,7 +46,7 @@ def resend_verify(payload: ResendVerify, background_tasks: BackgroundTasks, db: 
         username=payload.username
     )
     background_tasks.add_task(func=UserHandler.send_verify_mail, id_=result['id'], email=result['email'])
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/sign-in', response_model=response_models.SignIn)
@@ -54,7 +55,7 @@ def sign_in(payload: SignIn, db: Session = Depends(DBHandler.get_db)):
         db=db,
         payload=payload
     )
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/sign-up', response_model=response_models.SignUp)
@@ -64,7 +65,7 @@ async def sign_up(payload: SignUp, background_tasks: BackgroundTasks, db: Sessio
         payload=payload
     )
     background_tasks.add_task(func=UserHandler.send_verify_mail, id_=result['id'], email=result['email'])
-    return result
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/request-reset-password', response_model=response_models.SuccessOrNot)
@@ -76,7 +77,7 @@ def request_reset_password(payload: RequestResetPassword,
         email=payload.email
     )
     background_tasks.add_task(func=UserHandler.send_reset_password_mail, id_=result['id'], email=result['email'])
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.post('/reset-password', response_model=response_models.SuccessOrNot)
@@ -87,7 +88,7 @@ def reset_password(payload: ResetPassword, db: Session = Depends(DBHandler.get_d
         username=payload.username,
         password=payload.password
     )
-    return {'success': True}
+    return ResponseHandler.response(result=result)
 
 
 @router.get('/profile', response_model=response_models.UserBase)
@@ -105,4 +106,4 @@ def update_profile(profile: UpdateProfile,
         email=profile.email,
         nickname=profile.nickname
     )
-    return result
+    return ResponseHandler.response(result=result)
