@@ -75,7 +75,9 @@ class NotFoundException(_BaseError):
 
 @app.exception_handler(AuthException)
 def auth_exception_handler(request, exc):
-    return JSONResponse(content=exc.to_dict(), status_code=status.HTTP_401_UNAUTHORIZED)
+    return JSONResponse(content=exc.to_dict(),
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        headers={'WWW-Authenticate': 'basic'})
 
 
 @app.exception_handler(ValidationException)
