@@ -14,9 +14,12 @@
         ┗┻┛    ┗┻┛
     God Bless,Never Bug
 """
-from datetime import timedelta, datetime
 
-from fastapi import Header
+from datetime import timedelta, datetime
+from typing import Optional
+
+from fastapi import Header, Request, status, HTTPException
+from fastapi.security import HTTPBearer
 from jose import jwt
 from jose.exceptions import JWTError
 from passlib.context import CryptContext
@@ -51,13 +54,15 @@ class AuthTools:
         return cls._PWD_CONTEXT.hash(password)
 
 
-class AuthValidator:
+class AuthValidator(HTTPBearer):
     def __init__(self, roles=None):
+        super().__init__()
         self.roles = roles or list()
 
-    def __call__(self, authorization: str = Header()):
-        token = Pattern.BEARER_TOKEN.search(authorization).group(2)
+    async def __call__(self, request: Request) -> dict:
         try:
+            r = await super().__call__(request)
+            token = r.credentials
             user = jwt.decode(token=token, key=Config.SALT)
             if self.roles and user['role'] not in self.roles:
                 raise AuthException(
@@ -65,7 +70,7 @@ class AuthValidator:
                     error_code=ErrorCodes.ROLE_INVALIDATE
                 )
             return user
-        except JWTError as e:
+        except (JWTError, HTTPException) as e:
             raise AuthException(
                 error_msg='token invalidate',
                 error_code=ErrorCodes.TOKEN_INVALIDATE
