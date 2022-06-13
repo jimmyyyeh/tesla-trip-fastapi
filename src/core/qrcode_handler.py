@@ -16,15 +16,17 @@
 """
 
 import base64
-import qrcode
 from io import BytesIO
 from secrets import token_hex
 
+import qrcode
 from sqlalchemy.orm import Session
 
 from config import Config
 from database.db_handler import DBHandler
 from database.redis_handler import RedisHandler
+from utils.error_codes import ErrorCodes
+from utils.errors import NotFoundException
 
 
 class QRCodeHandler:
@@ -32,16 +34,20 @@ class QRCodeHandler:
     def decode_product(token: str):
         content = RedisHandler.get_redeem_product(token=token)
         if not content:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         return content
 
     @staticmethod
     def encode_product(db: Session, user: dict, product_id: int):
         product = DBHandler.get_product(db=db, product_id=product_id).first()
         if not product:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         content = {
             'user_id': user['id'],
             'id': product.id,

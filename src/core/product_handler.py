@@ -20,8 +20,10 @@ from sqlalchemy.orm import Session
 
 from database.db_handler import DBHandler
 from database.models import Product
-from utils.const import Const
 from database.redis_handler import RedisHandler
+from utils.const import Const
+from utils.error_codes import ErrorCodes
+from utils.errors import NotFoundException, ValidationException
 from utils.tools import Tools
 
 
@@ -107,8 +109,10 @@ class ProductHandler:
     def redeem_product(cls, db: Session, user: dict, token: str):
         content = RedisHandler.get_redeem_product(token=token)
         if not content:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         buyer_id = content['user_id']
         product_id = content['id']
         product = DBHandler.get_product(
@@ -116,11 +120,15 @@ class ProductHandler:
             product_id=product_id
         ).first()
         if not product:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         if product.stock == 0:
-            # TODO raise
-            ...
+            raise ValidationException(
+                error_msg='insufficient product stock',
+                error_code=ErrorCodes.INSUFFICIENT_PRODUCT_STOCK
+            )
         product.stock -= 1
         product_point = content['point']
         seller = user
@@ -131,8 +139,10 @@ class ProductHandler:
 
         origin_point = buyer.point
         if origin_point < product_point:
-            # TODO raise
-            ...
+            raise ValidationException(
+                error_msg='insufficient point',
+                error_code=ErrorCodes.INSUFFICIENT_POINT
+            )
         buyer.point -= product_point
         DBHandler.create_redeem_log(db=db, seller_id=seller['id'], buyer_id=buyer_id, product_id=product_id)
         DBHandler.create_point_log(

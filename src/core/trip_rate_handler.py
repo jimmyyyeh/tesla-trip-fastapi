@@ -19,6 +19,8 @@ from sqlalchemy.orm import Session
 from database.db_handler import DBHandler
 from database.models import User
 from utils.const import Const
+from utils.error_codes import ErrorCodes
+from utils.errors import NotFoundException
 
 
 class TripRateHandler:
@@ -62,8 +64,10 @@ class TripRateHandler:
         trip = DBHandler.get_trip(db=db, trip_id=trip_id)
 
         if not trip:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         trip_rater = DBHandler.get_user_by_id(db=db, id_=user['id'])
         trip_author = DBHandler.get_user_by_id(db=db, id_=trip.user_id)
         trip_rate = DBHandler.get_trip_rate(db=db, user_id=trip_author.id, trip_id=trip_id)

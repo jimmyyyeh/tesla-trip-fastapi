@@ -27,6 +27,8 @@ from database.models import User, AdministrativeDistrict, SuperCharger, Car, Car
     Product, RedeemLog
 from utils.auth_tools import AuthTools
 from utils.const import Const
+from utils.error_codes import ErrorCodes
+from utils.errors import NotFoundException
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -73,7 +75,6 @@ class DBHandler:
         )
         db.add(user)
         db.commit()
-        # TODO send email
         return user
 
     ### administrative district  ###
@@ -115,9 +116,6 @@ class DBHandler:
         ).filter(
             *filter_
         )
-        if not car:
-            # TODO raise
-            ...
         return car
 
     @staticmethod
@@ -375,8 +373,10 @@ class DBHandler:
                        stock: Optional[int] = None, point: Optional[int] = None, is_launched: Optional[bool] = False):
         product = cls.get_product(db=db, product_id=product_id, charger_id=user['charger_id']).first()
         if not product:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         if name:
             product.name = name
         if stock:
@@ -393,7 +393,9 @@ class DBHandler:
     def delete_product(cls, db: Session, product_id: int, user: dict):
         product = cls.get_product(db=db, product_id=product_id, charger_id=user['charger_id'])
         if not product:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         product.delete()
         db.commit()

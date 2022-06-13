@@ -24,6 +24,8 @@ from sqlalchemy.orm import Session
 from config import Config
 from database.db_handler import DBHandler
 from utils.auth_tools import AuthTools
+from utils.error_codes import ErrorCodes
+from utils.errors import AuthException, ValidationException
 from utils.payload_schemas import SignIn, SignUp
 from database.redis_handler import RedisHandler
 from utils.tools import Tools
@@ -88,13 +90,22 @@ class UserHandler:
     @staticmethod
     def sign_in(db: Session, payload: SignIn):
         user = DBHandler.get_user_by_username(db=db, username=payload.username)
-        verified = AuthTools.verify_password(password=payload.password, hashed_password=user.password)
-        if not verified:
-            # TODO raise
-            ...
+        validated = AuthTools.verify_password(password=payload.password, hashed_password=user.password)
+        if not validated:
+            raise AuthException(
+                error_msg='user invalidate',
+                error_code=ErrorCodes.USER_INVALIDATE
+            )
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
+        if not user.is_verified:
+            raise AuthException(
+                error_msg='user unverified',
+                error_code=ErrorCodes.USER_UNVERIFIED
+            )
         result = {
             'id': user.id,
             'username': user.username,
@@ -116,8 +127,10 @@ class UserHandler:
     def sign_up(cls, db: Session, payload: SignUp):
         user = DBHandler.get_user_by_username(db=db, username=payload.username, email=payload.email)
         if user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         user = DBHandler.create_user(
             db=db,
             username=payload.username,
@@ -147,15 +160,19 @@ class UserHandler:
             verify_token=verify_token
         )
         if not id_:
-            # TODO raise
-            ...
+            raise ValidationException(
+                error_msg='token not exists',
+                error_code=ErrorCodes.VERIFY_TOKEN_NOT_EXISTS
+            )
         user = DBHandler.get_user_by_id(
             db=db,
             id_=id_
         )
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         user.is_verified = True
         db.commit()
         RedisHandler.delete_verify_user(verify_token=verify_token)
@@ -165,8 +182,10 @@ class UserHandler:
     def resend_verify(db: Session, username: str):
         user = DBHandler.get_user_by_username(db=db, username=username)
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         result = {
             'id': user.id,
             'email': user.email
@@ -179,8 +198,10 @@ class UserHandler:
             db=db, email=email
         )
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         result = {
             'id': user.id,
             'email': user.email
@@ -193,15 +214,21 @@ class UserHandler:
             reset_token=reset_token
         )
         if not id_:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='token not exists',
+                error_code=ErrorCodes.RESET_PASSWORD_TOKEN_NOT_EXISTS
+            )
         user = DBHandler.get_user_by_id(db=db, id_=id_)
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         if user.username != username:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         user.password = AuthTools.get_password_hash(password=password)
         db.commit()
         RedisHandler.delete_reset_password(reset_token=reset_token)
@@ -211,8 +238,10 @@ class UserHandler:
     def update_profile(db: Session, user: dict, email:EmailStr, nickname: str):
         user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         if not user:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='user not exists',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         if nickname:
             user.nickname = nickname
         if email:

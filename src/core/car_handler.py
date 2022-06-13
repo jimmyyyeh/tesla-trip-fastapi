@@ -24,6 +24,8 @@ from sqlalchemy.orm import Session
 from database.db_handler import DBHandler
 from database.models import Trip, TripRate, User
 from utils.const import Const
+from utils.error_codes import ErrorCodes
+from utils.errors import NotFoundException
 from utils.pattern import Pattern
 from utils.tools import Tools
 
@@ -33,6 +35,11 @@ class CarHandler:
     @classmethod
     def get_cars(cls, db: Session, user_id: int, car_id: int):
         cars = DBHandler.get_cars(db=db, user_id=user_id, car_id=car_id).all()
+        if not cars:
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         results = list()
         for car in cars:
             result = {
@@ -64,8 +71,10 @@ class CarHandler:
         car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
 
         if not car_model:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         car = DBHandler.create_car(
             db=db,
             user_id=user_id,
@@ -88,12 +97,16 @@ class CarHandler:
     def update_car(cls, db: Session, user_id: int, car_id: int, model: str, spec: str, manufacture_date: date):
         car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id).first()
         if not car:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
         car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
         if not car_model:
-            # TODO raise
-            ...
+            raise NotFoundException(
+                error_msg='data not found',
+                error_code=ErrorCodes.DATA_NOT_FOUND
+            )
 
         car.car_model_id = car_model.id
         car.manufacture_date = manufacture_date

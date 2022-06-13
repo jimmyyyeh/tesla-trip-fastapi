@@ -22,6 +22,8 @@ from jose.exceptions import JWTError
 from passlib.context import CryptContext
 
 from config import Config
+from utils.error_codes import ErrorCodes
+from utils.errors import AuthException
 from utils.pattern import Pattern
 
 
@@ -58,9 +60,13 @@ class AuthValidator:
         try:
             user = jwt.decode(token=token, key=Config.SALT)
             if self.roles and user['role'] not in self.roles:
-                # TODO raise
-                ...
+                raise AuthException(
+                    error_msg='role invalidate',
+                    error_code=ErrorCodes.ROLE_INVALIDATE
+                )
             return user
         except JWTError as e:
-            # TODO raise
-            ...
+            raise AuthException(
+                error_msg='token invalidate',
+                error_code=ErrorCodes.TOKEN_INVALIDATE
+            )
