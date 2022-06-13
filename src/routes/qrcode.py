@@ -28,6 +28,7 @@ from utils.response_models import ResponseHandler
 router = APIRouter(prefix='/qrcode', tags=['qrcode'])
 general_auth = AuthValidator()
 
+
 @router.get('/product/{token}', response_model=response_models.DecodeProduct)
 def decode_product(token: str, user: dict = Depends(general_auth)):
     result = QRCodeHandler.decode_product(

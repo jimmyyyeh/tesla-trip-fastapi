@@ -15,8 +15,6 @@
     God Bless,Never Bug
 """
 
-from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -29,6 +27,7 @@ from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/car', tags=['car'])
 general_auth = AuthValidator()
+
 
 @router.get('/car-model', response_model=response_models.CarModel)
 def get_car_model(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):

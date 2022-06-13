@@ -27,6 +27,7 @@ from utils.response_models import ResponseHandler
 router = APIRouter(prefix='/super-charger', tags=['super charger'])
 general_auth = AuthValidator()
 
+
 @router.get('/', response_model=response_models.SuperCharger)
 def get_super_charger(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = ChargerHandler.get_chargers(db=db)
