@@ -16,7 +16,7 @@
 """
 
 from fastapi import status
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, ValidationError
 from fastapi.responses import JSONResponse
 from pydantic.error_wrappers import ValidationError as PydanticValidationError
 from loguru import logger
@@ -97,6 +97,15 @@ def request_validation_exception_handler(request, exc):
         error_msg='parameter error',
         error_code=ErrorCodes.PARAMETER_ERROR,
     ), status_code=status.HTTP_401_UNAUTHORIZED)
+
+
+@app.exception_handler(ValidationError)
+def validation_exception_handler(request, exc):
+    logger.exception(exc.json())
+    return JSONResponse(content=make_error_schema(
+        error_msg='unprocessable entity',
+        error_code=ErrorCodes.PARAMETER_ERROR,
+    ), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @app.exception_handler(PydanticValidationError)

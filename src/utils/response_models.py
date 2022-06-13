@@ -193,6 +193,11 @@ class Trip(BaseModel):
     pager: Optional[Pager] = None
 
 
+class Error(BaseModel):
+    error_msg: str
+    error_code: int
+
+
 class ResponseHandler:
     @staticmethod
     def response(result, pager=None, status_code=status.HTTP_200_OK):
