@@ -15,6 +15,8 @@
     God Bless,Never Bug
 """
 
+import uvicorn
+
 from app import create_app
 from routes import *
 
@@ -28,3 +30,6 @@ app.include_router(trip.router)
 app.include_router(trip_rate.router)
 app.include_router(product.router)
 app.include_router(qrcode.router)
+
+if __name__ == '__main__':
+    uvicorn.run(app, host='0.0.0.0', port=5000)
