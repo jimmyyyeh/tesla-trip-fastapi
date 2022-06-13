@@ -20,12 +20,15 @@ from typing import Optional
 from pydantic import EmailStr
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 
-from database.db_manager import SessionLocal
+from app import engine
 from database.models import User, AdministrativeDistrict, SuperCharger, Car, CarModel, PointLog, Trip, TripRate, \
     Product, RedeemLog
 from utils.auth_tools import AuthTools
 from utils.const import Const
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class DBHandler:

@@ -17,7 +17,9 @@
 
 from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, func, text, DateTime, Boolean
 
-from database.db_manager import Base
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
 
 
 class User(Base):

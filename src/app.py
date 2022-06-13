@@ -16,7 +16,12 @@
 """
 
 import redis
+from fastapi import FastAPI
+from sqlalchemy import create_engine
+
 from config import Config
+
+app = FastAPI()
 
 redis_instance = redis.StrictRedis(
     host=Config.REDIS_HOST,
@@ -25,3 +30,9 @@ redis_instance = redis.StrictRedis(
     charset='utf-8',
     decode_responses=True,
 )
+
+engine = create_engine(url=Config.SQLALCHEMY_DATABASE_URL)
+
+
+def create_app():
+    return app
