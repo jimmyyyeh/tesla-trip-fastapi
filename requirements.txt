@@ -23,4 +23,7 @@ qrcode==7.3.1
 pillow==9.1.1
 
 # log
-loguru== 0.6.0
+loguru==0.6.0
+
+# others
+orjson==3.7.2

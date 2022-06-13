@@ -16,9 +16,9 @@
 """
 
 from datetime import date
-from typing import Optional, List, Dict
-from typing import Union
-
+from fastapi import status
+from fastapi.responses import JSONResponse, ORJSONResponse
+from typing import Optional, List, Dict, Union
 from pydantic import BaseModel, EmailStr
 
 
@@ -195,8 +195,8 @@ class Trip(BaseModel):
 
 class ResponseHandler:
     @staticmethod
-    def response(result, pager=None):
+    def response(result, pager=None, status_code=status.HTTP_200_OK):
         if isinstance(result, bool):
-            return {'success': result}
+            return ORJSONResponse(content={'success': result}, status_code=status_code)
         else:
-            return {'data': result, 'pager': pager}
+            return ORJSONResponse(content={'data': result, 'pager': pager}, status_code=status_code)
