@@ -22,7 +22,7 @@ from secrets import token_hex
 import qrcode
 from sqlalchemy.orm import Session
 
-from config import Config
+from app import settings
 from database.db_handler import DBHandler
 from database.redis_handler import RedisHandler
 from utils.error_codes import ErrorCodes
@@ -57,7 +57,7 @@ class QRCodeHandler:
         token = token_hex(16)
         RedisHandler.set_redeem_product(token=token, content=content)
 
-        url = f'{Config.WEB_DOMAIN}/redeem/{token}'
+        url = f'{settings.web_domain}/redeem/{token}'
         qrcode_ = qrcode.make(url)
         img = BytesIO()
         qrcode_.save(img, format='PNG')

@@ -21,13 +21,13 @@ from fastapi_mail import FastMail, ConnectionConfig, MessageSchema
 from pydantic import EmailStr
 from sqlalchemy.orm import Session
 
-from config import Config
+from app import settings
 from database.db_handler import DBHandler
+from database.redis_handler import RedisHandler
 from utils.auth_tools import AuthTools
 from utils.error_codes import ErrorCodes
 from utils.errors import AuthException, ValidationException
 from utils.payload_schemas import SignIn, SignUp
-from database.redis_handler import RedisHandler
 from utils.tools import Tools
 
 
@@ -36,13 +36,13 @@ class UserHandler:
     @staticmethod
     async def _send_email(subject, email, html):
         mail_config = ConnectionConfig(
-            MAIL_USERNAME=Config.MAIL_USERNAME,
-            MAIL_PASSWORD=Config.MAIL_PASSWORD,
-            MAIL_FROM=EmailStr(f'{Config.MAIL_USERNAME}@gmail.com'),
-            MAIL_PORT=Config.MAIL_PORT,
-            MAIL_SERVER=Config.MAIL_SERVER,
+            MAIL_USERNAME=settings.mail_username,
+            MAIL_PASSWORD=settings.mail_password,
+            MAIL_FROM=EmailStr(f'{settings.mail_username}@gmail.com'),
+            MAIL_PORT=settings.mail_port,
+            MAIL_SERVER=settings.mail_server,
             MAIL_TLS=False,
-            MAIL_SSL=Config.MAIL_USE_SSL,
+            MAIL_SSL=settings.mail_use_ssl,
             USE_CREDENTIALS=True,
             VALIDATE_CERTS=True
         )
@@ -66,7 +66,7 @@ class UserHandler:
                 <h1>歡迎註冊</h1>
                 <body>
                     <p>歡迎您註冊Tesla Trip，請點選以下連結以進行驗證:</p>
-                    <a href='{Config.WEB_DOMAIN}/#/verify/{verify_token}'>驗證連結</a>
+                    <a href='{settings.web_domain}/#/verify/{verify_token}'>驗證連結</a>
                 </body>
                 """
         await cls._send_email(subject='Tesla Trip 驗證信件', email=email, html=html)
@@ -82,7 +82,7 @@ class UserHandler:
                 <h1>重設密碼</h1>
                 <body>
                     <p>親愛的Tesla Trip用戶您好，請點選以下連結以進行重置密碼:</p>
-                    <a href='{Config.WEB_DOMAIN}/#/resetPassword/{reset_token}'>重設密碼連結</a>
+                    <a href='{settings.web_domain}/#/resetPassword/{reset_token}'>重設密碼連結</a>
                 </body>
                 """
         await cls._send_email(subject='Tesla Trip 重設密碼信件', email=email, html=html)
@@ -235,7 +235,7 @@ class UserHandler:
         return True
 
     @staticmethod
-    def update_profile(db: Session, user: dict, email:EmailStr, nickname: str):
+    def update_profile(db: Session, user: dict, email: EmailStr, nickname: str):
         user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         if not user:
             raise AuthException(

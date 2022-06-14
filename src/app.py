@@ -15,11 +15,14 @@
     God Bless,Never Bug
 """
 
+
+from urllib.parse import quote
+
 import redis
 from fastapi import FastAPI, status
 from sqlalchemy import create_engine
 
-from config import Config
+from settings import Settings
 from utils.error_codes import ErrorCodes
 from utils.response_models import Error
 
@@ -67,16 +70,20 @@ responses = {
 }
 
 app = FastAPI(responses=responses)
+settings = Settings()
 
 redis_instance = redis.StrictRedis(
-    host=Config.REDIS_HOST,
-    password=Config.REDIS_PASSWORD,
-    port=Config.REDIS_PORT,
+    host=settings.redis_host,
+    password=settings.redis_password,
+    port=settings.redis_port,
     charset='utf-8',
     decode_responses=True,
 )
 
-engine = create_engine(url=Config.SQLALCHEMY_DATABASE_URL)
+url = f'mysql+pymysql://' \
+      f'{settings.mysql_user}:%s@{settings.mysql_host}:{settings.mysql_port}/{settings.db_name}' \
+      % quote(settings.mysql_password)
+engine = create_engine(url=url)
 
 
 def create_app():
