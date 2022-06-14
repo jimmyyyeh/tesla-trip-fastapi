@@ -15,11 +15,11 @@
     God Bless,Never Bug
 """
 
-
 from urllib.parse import quote
 
 import redis
 from fastapi import FastAPI, status
+from fastapi.openapi.utils import get_openapi
 from sqlalchemy import create_engine
 
 from settings import Settings
@@ -69,7 +69,26 @@ responses = {
     },
 }
 
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title='tesla trip api',
+        version='0.0.1',
+        description='The api doc of tesla trip api',
+        routes=app.routes
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+def create_app():
+    return app
+
+
 app = FastAPI(responses=responses)
+app.openapi = custom_openapi
 settings = Settings()
 
 redis_instance = redis.StrictRedis(
@@ -84,7 +103,3 @@ url = f'mysql+pymysql://' \
       f'{settings.mysql_user}:%s@{settings.mysql_host}:{settings.mysql_port}/{settings.db_name}' \
       % quote(settings.mysql_password)
 engine = create_engine(url=url)
-
-
-def create_app():
-    return app
