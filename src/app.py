@@ -23,7 +23,7 @@ from config import Config
 from utils.error_codes import ErrorCodes
 from utils.response_models import Error
 
-app = FastAPI(responses={
+responses = {
     400: {
         'model': Error, 'description': 'Bad request',
         'content': {
@@ -64,7 +64,9 @@ app = FastAPI(responses={
             }
         },
     },
-})
+}
+
+app = FastAPI(responses=responses)
 
 redis_instance = redis.StrictRedis(
     host=Config.REDIS_HOST,
