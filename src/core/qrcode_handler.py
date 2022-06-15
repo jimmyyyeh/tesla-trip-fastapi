@@ -31,7 +31,7 @@ from utils.errors import NotFoundException
 
 class QRCodeHandler:
     @staticmethod
-    def decode_product(token: str):
+    async def decode_product(token: str):
         content = RedisHandler.get_redeem_product(token=token)
         if not content:
             raise NotFoundException(
@@ -41,7 +41,7 @@ class QRCodeHandler:
         return content
 
     @staticmethod
-    def encode_product(db: Session, user: dict, product_id: int):
+    async def encode_product(db: Session, user: dict, product_id: int):
         product = DBHandler.get_product(db=db, product_id=product_id).first()
         if not product:
             raise NotFoundException(

@@ -26,8 +26,8 @@ from utils.tools import Tools
 
 class TripHandler:
     @staticmethod
-    def get_trips(db: Session, user_id: int, is_my_trip: bool, page: int, per_page: int, charger: str, start: str,
-                  end: str, model: str, spec: str):
+    async def get_trips(db: Session, user_id: int, is_my_trip: bool, page: int, per_page: int, charger: str, start: str,
+                        end: str, model: str, spec: str):
         trips = DBHandler.get_trips(
             db=db,
             user_id=user_id,
@@ -70,7 +70,7 @@ class TripHandler:
         return results, pager
 
     @staticmethod
-    def create_trip(db: Session, user_id: int, trips: List[CreateTrip]):
+    async def create_trip(db: Session, user_id: int, trips: List[CreateTrip]):
         for trip in trips:
             DBHandler.create_trip(
                 db=db,

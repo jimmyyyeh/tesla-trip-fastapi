@@ -35,15 +35,15 @@ charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 
 @router.get('/{product_id}', response_model=response_models.Product)
 @router.get('/', response_model=response_models.Product)
-def get_product(product_id: int = None,
-                is_self: Optional[bool] = None,
-                charger_id: Optional[int] = None,
-                name: Optional[str] = None,
-                page: Optional[int] = 1,
-                per_page: Optional[int] = 10,
-                user: dict = Depends(general_auth),
-                db: Session = Depends(DBHandler.get_db)):
-    result, pager = ProductHandler.get_products(
+async def get_product(product_id: int = None,
+                      is_self: Optional[bool] = None,
+                      charger_id: Optional[int] = None,
+                      name: Optional[str] = None,
+                      page: Optional[int] = 1,
+                      per_page: Optional[int] = 10,
+                      user: dict = Depends(general_auth),
+                      db: Session = Depends(DBHandler.get_db)):
+    result, pager = await ProductHandler.get_products(
         db=db,
         product_id=product_id,
         is_self=is_self,
@@ -57,9 +57,9 @@ def get_product(product_id: int = None,
 
 
 @router.post('/', response_model=response_models.Product)
-def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
-                   db: Session = Depends(DBHandler.get_db)):
-    result = ProductHandler.create_product(
+async def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
+                         db: Session = Depends(DBHandler.get_db)):
+    result = await ProductHandler.create_product(
         db=db,
         user=user,
         name=product.name,

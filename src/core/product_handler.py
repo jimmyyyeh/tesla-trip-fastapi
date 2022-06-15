@@ -29,8 +29,8 @@ from utils.tools import Tools
 
 class ProductHandler:
     @staticmethod
-    def get_products(db: Session, product_id: int, is_self: bool, charger_id: int, name: str, user: dict, page: int,
-                     per_page: int):
+    async def get_products(db: Session, product_id: int, is_self: bool, charger_id: int, name: str, user: dict,
+                           page: int, per_page: int):
         products = DBHandler.get_products(
             db=db,
             product_id=product_id,
@@ -61,7 +61,8 @@ class ProductHandler:
         return results, pager
 
     @staticmethod
-    def create_product(db: Session, user: dict, name: str, stock: int, point: int, is_launched: Optional[bool] = False):
+    async def create_product(db: Session, user: dict, name: str, stock: int, point: int,
+                             is_launched: Optional[bool] = False):
         product = DBHandler.create_product(
             db=db,
             user=user,
@@ -80,8 +81,9 @@ class ProductHandler:
         return result
 
     @classmethod
-    def update_product(cls, db: Session, user: dict, product_id: int, name: Optional[str] = None,
-                       stock: Optional[int] = None, point: Optional[int] = None, is_launched: Optional[bool] = False):
+    async def update_product(cls, db: Session, user: dict, product_id: int, name: Optional[str] = None,
+                             stock: Optional[int] = None, point: Optional[int] = None,
+                             is_launched: Optional[bool] = False):
         product = DBHandler.update_product(
             db=db,
             product_id=product_id,
@@ -101,12 +103,12 @@ class ProductHandler:
         return result
 
     @classmethod
-    def delete_product(cls, db: Session, user: dict, product_id: int):
+    async def delete_product(cls, db: Session, user: dict, product_id: int):
         DBHandler.delete_product(db=db, user=user, product_id=product_id)
         return True
 
     @classmethod
-    def redeem_product(cls, db: Session, user: dict, token: str):
+    async def redeem_product(cls, db: Session, user: dict, token: str):
         content = RedisHandler.get_redeem_product(token=token)
         if not content:
             raise NotFoundException(

@@ -32,11 +32,11 @@ general_auth = AuthValidator()
 
 
 @router.get('/', response_model=response_models.Trip)
-def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
-             charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
-             model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
-             db: Session = Depends(DBHandler.get_db)):
-    result, pager = TripHandler.get_trips(
+async def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
+                   charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
+                   model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
+                   db: Session = Depends(DBHandler.get_db)):
+    result, pager = await TripHandler.get_trips(
         db=db,
         user_id=user['id'],
         is_my_trip=is_my_trip,
@@ -52,9 +52,9 @@ def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_pag
 
 
 @router.post('/', response_model=response_models.SuccessOrNot)
-def create_trip(trips: List[CreateTrip], user: dict = Depends(general_auth),
-                db: Session = Depends(DBHandler.get_db)):
-    result = TripHandler.create_trip(
+async def create_trip(trips: List[CreateTrip], user: dict = Depends(general_auth),
+                      db: Session = Depends(DBHandler.get_db)):
+    result = await TripHandler.create_trip(
         db=db,
         user_id=user['id'],
         trips=trips

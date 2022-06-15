@@ -33,7 +33,7 @@ from utils.tools import Tools
 class CarHandler:
 
     @classmethod
-    def get_cars(cls, db: Session, user_id: int, car_id: int):
+    async def get_cars(cls, db: Session, user_id: int, car_id: int):
         cars = DBHandler.get_cars(db=db, user_id=user_id, car_id=car_id).all()
         if not cars:
             raise NotFoundException(
@@ -67,7 +67,7 @@ class CarHandler:
         return filename
 
     @classmethod
-    def create_car(cls, db: Session, user_id: int, model: str, spec: str, manufacture_date: date, file: str):
+    async def create_car(cls, db: Session, user_id: int, model: str, spec: str, manufacture_date: date, file: str):
         car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
 
         if not car_model:
@@ -94,7 +94,7 @@ class CarHandler:
         return result
 
     @classmethod
-    def update_car(cls, db: Session, user_id: int, car_id: int, model: str, spec: str, manufacture_date: date):
+    async def update_car(cls, db: Session, user_id: int, car_id: int, model: str, spec: str, manufacture_date: date):
         car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id).first()
         if not car:
             raise NotFoundException(
@@ -148,7 +148,7 @@ class CarHandler:
         return car, trips, trip_rates
 
     @classmethod
-    def delete_car(cls, db: Session, user: dict, car_id: id):
+    async def delete_car(cls, db: Session, user: dict, car_id: id):
         car, trips, trip_rates = cls._get_delete_car_info(db=db, user_id=user['id'], car_id=car_id)
         if trip_rates:
             trip_rates.delate()
@@ -161,7 +161,7 @@ class CarHandler:
         return True
 
     @classmethod
-    def get_car_models(cls, db: Session):
+    async def get_car_models(cls, db: Session):
         car_models = DBHandler.get_car_models(db=db).all()
         results = list()
         for car_model in car_models:
@@ -174,7 +174,7 @@ class CarHandler:
         return results
 
     @classmethod
-    def get_car_deduct_point(cls, db: Session, user: dict, car_id: int):
+    async def get_car_deduct_point(cls, db: Session, user: dict, car_id: int):
         _, trips, trip_rates = cls._get_delete_car_info(db=db, user_id=user['id'], car_id=car_id)
         total_deduct = Tools.get_deduct_point(trips=trips, trip_rates=trip_rates)
         return {'total': total_deduct}

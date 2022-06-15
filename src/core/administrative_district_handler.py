@@ -22,7 +22,7 @@ from database.db_handler import DBHandler
 
 class AdministrativeDistrictHandler:
     @staticmethod
-    def get_administrative_districts(db: Session):
+    async def get_administrative_districts(db: Session):
         administrative_districts = DBHandler.get_administrative_district(
             db=db
         )

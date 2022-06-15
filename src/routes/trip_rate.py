@@ -30,9 +30,9 @@ general_auth = AuthValidator()
 
 
 @router.put('/', response_model=response_models.SuccessOrNot)
-def update_trip_rate(payload: UpdateTripRate, user: dict = Depends(general_auth),
-                     db: Session = Depends(DBHandler.get_db)):
-    result = TripRateHandler.update_user_trip_rate(
+async def update_trip_rate(payload: UpdateTripRate, user: dict = Depends(general_auth),
+                           db: Session = Depends(DBHandler.get_db)):
+    result = await TripRateHandler.update_user_trip_rate(
         db=db,
         user=user,
         trip_id=payload.trip_id

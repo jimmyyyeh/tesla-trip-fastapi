@@ -60,7 +60,7 @@ class TripRateHandler:
         )
 
     @classmethod
-    def update_user_trip_rate(cls, db: Session, user: dict, trip_id: int):
+    async def update_user_trip_rate(cls, db: Session, user: dict, trip_id: int):
         trip = DBHandler.get_trip(db=db, trip_id=trip_id)
 
         if not trip:

@@ -29,6 +29,6 @@ general_auth = AuthValidator()
 
 
 @router.get('/', response_model=response_models.AdministrativeDistrict)
-def get_administrative_district(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
-    result = AdministrativeDistrictHandler.get_administrative_districts(db=db)
+async def get_administrative_district(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
+    result = await AdministrativeDistrictHandler.get_administrative_districts(db=db)
     return ResponseHandler.response(result=result)

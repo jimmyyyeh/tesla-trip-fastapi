@@ -30,17 +30,17 @@ general_auth = AuthValidator()
 
 
 @router.get('/product/{token}', response_model=response_models.DecodeProduct)
-def decode_product(token: str, user: dict = Depends(general_auth)):
-    result = QRCodeHandler.decode_product(
+async def decode_product(token: str, user: dict = Depends(general_auth)):
+    result = await QRCodeHandler.decode_product(
         token=token
     )
     return ResponseHandler.response(result=result)
 
 
 @router.post('/product', response_model=response_models.EncodeProduct)
-def encode_product(payload: EncodeProduct, user: dict = Depends(general_auth),
-                   db: Session = Depends(DBHandler.get_db)):
-    result = QRCodeHandler.encode_product(
+async def encode_product(payload: EncodeProduct, user: dict = Depends(general_auth),
+                         db: Session = Depends(DBHandler.get_db)):
+    result = await QRCodeHandler.encode_product(
         db=db,
         user=user,
         product_id=payload.product_id

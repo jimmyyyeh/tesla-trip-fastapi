@@ -88,7 +88,7 @@ class UserHandler:
         await cls._send_email(subject='Tesla Trip 重設密碼信件', email=email, html=html)
 
     @staticmethod
-    def sign_in(db: Session, payload: SignIn):
+    async def sign_in(db: Session, payload: SignIn):
         user = DBHandler.get_user_by_username(db=db, username=payload.username)
         validated = AuthTools.verify_password(password=payload.password, hashed_password=user.password)
         if not validated:
@@ -124,7 +124,7 @@ class UserHandler:
         return result
 
     @classmethod
-    def sign_up(cls, db: Session, payload: SignUp):
+    async def sign_up(cls, db: Session, payload: SignUp):
         user = DBHandler.get_user_by_username(db=db, username=payload.username, email=payload.email)
         if user:
             raise AuthException(
@@ -155,7 +155,7 @@ class UserHandler:
         return result
 
     @staticmethod
-    def verify(db: Session, verify_token: str):
+    async def verify(db: Session, verify_token: str):
         id_ = RedisHandler.get_verify_user(
             verify_token=verify_token
         )
@@ -179,7 +179,7 @@ class UserHandler:
         return True
 
     @staticmethod
-    def resend_verify(db: Session, username: str):
+    async def resend_verify(db: Session, username: str):
         user = DBHandler.get_user_by_username(db=db, username=username)
         if not user:
             raise AuthException(
@@ -193,7 +193,7 @@ class UserHandler:
         return result
 
     @staticmethod
-    def request_reset_password(db: Session, email: EmailStr):
+    async def request_reset_password(db: Session, email: EmailStr):
         user = DBHandler.get_user_by_email(
             db=db, email=email
         )
@@ -209,7 +209,7 @@ class UserHandler:
         return result
 
     @staticmethod
-    def reset_password(db: Session, reset_token: str, username: str, password: str):
+    async def reset_password(db: Session, reset_token: str, username: str, password: str):
         id_ = RedisHandler.get_reset_password(
             reset_token=reset_token
         )
@@ -235,7 +235,7 @@ class UserHandler:
         return True
 
     @staticmethod
-    def update_profile(db: Session, user: dict, email: EmailStr, nickname: str):
+    async def update_profile(db: Session, user: dict, email: EmailStr, nickname: str):
         user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         if not user:
             raise AuthException(
