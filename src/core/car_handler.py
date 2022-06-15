@@ -151,7 +151,7 @@ class CarHandler:
     async def delete_car(cls, db: Session, user: dict, car_id: id):
         car, trips, trip_rates = cls._get_delete_car_info(db=db, user_id=user['id'], car_id=car_id)
         if trip_rates:
-            trip_rates.delate()
+            trip_rates.delete()
         if trips:
             trips.delete()
         car.delete()
