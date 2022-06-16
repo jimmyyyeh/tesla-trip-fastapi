@@ -28,7 +28,7 @@ from utils.const import Const
 from utils.payload_schemas import CreateProduct, UpdateProduct
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/product', tags=['product'])
+router = APIRouter(prefix='/products', tags=['product'])
 general_auth = AuthValidator()
 charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 

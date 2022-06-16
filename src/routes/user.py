@@ -83,7 +83,7 @@ async def request_reset_password(payload: RequestResetPassword,
 
 @router.post('/reset-password', response_model=response_models.SuccessOrNot)
 async def reset_password(payload: ResetPassword, db: Session = Depends(DBHandler.get_db)):
-    result = await  UserHandler.reset_password(
+    result = await UserHandler.reset_password(
         db=db,
         reset_token=payload.token,
         username=payload.username,

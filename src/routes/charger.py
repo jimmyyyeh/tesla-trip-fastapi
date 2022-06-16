@@ -24,7 +24,7 @@ from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/super-charger', tags=['super charger'])
+router = APIRouter(prefix='/super-chargers', tags=['super charger'])
 general_auth = AuthValidator()
 
 

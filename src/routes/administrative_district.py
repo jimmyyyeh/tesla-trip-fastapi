@@ -24,7 +24,7 @@ from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/administrative-district', tags=['administrative district'])
+router = APIRouter(prefix='/administrative-districts', tags=['administrative district'])
 general_auth = AuthValidator()
 
 

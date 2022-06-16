@@ -27,7 +27,7 @@ from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateTrip
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/trip', tags=['trip'])
+router = APIRouter(prefix='/trips', tags=['trip'])
 general_auth = AuthValidator()
 
 

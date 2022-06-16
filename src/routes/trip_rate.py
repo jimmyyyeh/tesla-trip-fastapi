@@ -25,7 +25,7 @@ from utils.auth_tools import AuthValidator
 from utils.payload_schemas import UpdateTripRate
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/trip-rate', tags=['trip rate'])
+router = APIRouter(prefix='/trip-rates', tags=['trip rate'])
 general_auth = AuthValidator()
 
 

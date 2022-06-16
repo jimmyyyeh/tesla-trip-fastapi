@@ -25,11 +25,11 @@ from utils.auth_tools import AuthValidator
 from utils.payload_schemas import CreateCar, UpdateCar
 from utils.response_models import ResponseHandler
 
-router = APIRouter(prefix='/car', tags=['car'])
+router = APIRouter(prefix='/cars', tags=['car'])
 general_auth = AuthValidator()
 
 
-@router.get('/car-model', response_model=response_models.CarModel)
+@router.get('/car-models', response_model=response_models.CarModel)
 async def get_car_model(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = await CarHandler.get_car_models(
         db=db
