@@ -17,6 +17,7 @@
 
 from routes.administrative_district import *
 from routes.car import *
+from routes.car_model import *
 from routes.charger import *
 from routes.event import *
 from routes.product import *

@@ -161,19 +161,6 @@ class CarHandler:
         return True
 
     @classmethod
-    async def get_car_models(cls, db: Session):
-        car_models = DBHandler.get_car_models(db=db).all()
-        results = list()
-        for car_model in car_models:
-            result = {
-                'id': car_model.id,
-                'model': car_model.model,
-                'spec': car_model.spec,
-            }
-            results.append(result)
-        return results
-
-    @classmethod
     async def get_car_deduct_point(cls, db: Session, user: dict, car_id: int):
         _, trips, trip_rates = cls._get_delete_car_info(db=db, user_id=user['id'], car_id=car_id)
         total_deduct = Tools.get_deduct_point(trips=trips, trip_rates=trip_rates)
