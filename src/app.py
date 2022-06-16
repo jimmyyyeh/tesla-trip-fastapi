@@ -21,6 +21,7 @@ import redis
 from fastapi import FastAPI, status
 from fastapi.openapi.utils import get_openapi
 from sqlalchemy import create_engine
+from starlette.middleware.cors import CORSMiddleware
 
 from settings import Settings
 from utils.error_codes import ErrorCodes
@@ -89,6 +90,17 @@ def create_app():
 
 app = FastAPI(responses=responses)
 app.openapi = custom_openapi
+
+origins = ['*']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
+
 settings = Settings()
 
 redis_instance = redis.StrictRedis(
