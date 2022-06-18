@@ -67,11 +67,6 @@ class UpdateProfile(BaseModel):
     email: Optional[EmailStr] = None
     nickname: Optional[str] = None
 
-
-class RefreshToken(BaseModel):
-    refresh_token: str
-
-
 ### car ###
 class CreateCar(BaseModel):
     model: str
