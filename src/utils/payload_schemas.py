@@ -22,6 +22,8 @@ from pydantic import BaseModel, validator, EmailStr
 
 
 ### user ###
+from utils.const import Const
+
 
 class SignIn(BaseModel):
     username: str
@@ -38,8 +40,8 @@ class SignUp(BaseModel):
 
     @validator('sex')
     def valid_sex(cls, value):
-        if value not in {0, 1}:
-            raise ValueError('sex must be 1 or 0')
+        if value not in Const.Sex.get_elements():
+            raise ValueError('sex must be 1 or 2')
         return value
 
 

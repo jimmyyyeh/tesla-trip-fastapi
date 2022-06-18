@@ -24,8 +24,8 @@ class Const:
         CHARGER_OWNER = 2  # 超充站長
 
     class Sex(ConstTemplate):
-        MALE = '1'
-        FEMALE = '2'
+        MALE = 1
+        FEMALE = 2
 
     class PointLogType:
         CREATE_TRIP = 1  # 新增旅程
