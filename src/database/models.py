@@ -33,7 +33,7 @@ class User(Base):
     password = Column(String(100), nullable=False, comment='密碼')
     nickname = Column(String(30), nullable=False, comment='暱稱')
     email = Column(String(100), nullable=False, comment='電子郵件')
-    birthday = Column(Date, comment='生日')
+    birthday = Column(Date, nullable=False, comment='生日')
     sex = Column(Integer, nullable=False, comment='性別')
     charger_id = Column(Integer, ForeignKey('super_charger.id'), comment='管理超充 id')
     is_verified = Column(Boolean, nullable=False, server_default=text('0'), comment='是否已驗證')
@@ -68,7 +68,7 @@ class Car(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False, comment='使用者 id')
     car_model_id = Column(Integer, ForeignKey('car_model.id'), nullable=False, comment='車種型號 id')
-    manufacture_date = Column(Date, comment='出廠日期')
+    manufacture_date = Column(Date, nullable=False, comment='出廠日期')
     has_image = Column(Boolean, nullable=False, server_default=text('0'), comment='是否擁有圖片')
 
     create_datetime = Column(DateTime, nullable=False, server_default=func.now(), comment='建立時間')
@@ -82,8 +82,8 @@ class CarModel(Base):
     """
     __tablename__ = 'car_model'
     id = Column(Integer, primary_key=True)
-    model = Column(String(10), comment='型號')
-    spec = Column(String(30), comment='規格')
+    model = Column(String(10), nullable=False, comment='型號')
+    spec = Column(String(30), nullable=False, comment='規格')
 
     create_datetime = Column(DateTime, nullable=False, server_default=func.now(), comment='建立時間')
     update_datetime = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now(),
