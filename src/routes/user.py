@@ -73,7 +73,7 @@ async def sign_up(payload: SignUp, background_tasks: BackgroundTasks, db: Sessio
 async def request_reset_password(payload: RequestResetPassword,
                                  background_tasks: BackgroundTasks,
                                  db: Session = Depends(DBHandler.get_db)):
-    result = await  UserHandler.request_reset_password(
+    result = await UserHandler.request_reset_password(
         db=db,
         email=payload.email
     )

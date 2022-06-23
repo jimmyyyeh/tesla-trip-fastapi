@@ -128,7 +128,7 @@ class UserHandler:
         user = DBHandler.get_user_by_username(db=db, username=payload.username, email=payload.email)
         if user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user already exists',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         user = DBHandler.create_user(
