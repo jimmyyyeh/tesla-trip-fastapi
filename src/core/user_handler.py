@@ -98,7 +98,7 @@ class UserHandler:
             )
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         if not user.is_verified:
@@ -161,7 +161,7 @@ class UserHandler:
         )
         if not id_:
             raise ValidationException(
-                error_msg='token not exists',
+                error_msg='token does not exist',
                 error_code=ErrorCodes.VERIFY_TOKEN_NOT_EXISTS
             )
         user = DBHandler.get_user_by_id(
@@ -170,7 +170,7 @@ class UserHandler:
         )
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         user.is_verified = True
@@ -183,7 +183,7 @@ class UserHandler:
         user = DBHandler.get_user_by_username(db=db, username=username)
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         result = {
@@ -199,7 +199,7 @@ class UserHandler:
         )
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         result = {
@@ -215,18 +215,18 @@ class UserHandler:
         )
         if not id_:
             raise AuthException(
-                error_msg='token not exists',
+                error_msg='token does not exist',
                 error_code=ErrorCodes.RESET_PASSWORD_TOKEN_NOT_EXISTS
             )
         user = DBHandler.get_user_by_id(db=db, id_=id_)
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         if user.username != username:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         user.password = AuthTools.get_password_hash(password=password)
@@ -239,7 +239,7 @@ class UserHandler:
         user = DBHandler.get_user_by_id(db=db, id_=user['id'])
         if not user:
             raise AuthException(
-                error_msg='user not exists',
+                error_msg='user does not exist',
                 error_code=ErrorCodes.USER_NOT_EXISTS
             )
         if nickname:

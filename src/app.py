@@ -40,7 +40,7 @@ responses = {
         'model': Error, 'description': 'Auth failed',
         'content': {
             'application/json': {
-                'example': {'error_msg': 'user not exists', 'error_code': ErrorCodes.USER_NOT_EXISTS}
+                'example': {'error_msg': 'user does not exist', 'error_code': ErrorCodes.USER_NOT_EXISTS}
             }
         },
     },
