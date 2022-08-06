@@ -30,13 +30,13 @@ general_auth = AuthValidator()
 
 
 @router.get('/{car_id}', response_model=Response[response_models.Car])
-@router.get('/', response_model=Response[response_models.Car])
+@router.get('', response_model=Response[response_models.Car])
 async def get_car(car_id: int = None, user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = await CarHandler.get_cars(db=db, user_id=user['id'], car_id=car_id)
     return ResponseHandler.response(result=result)
 
 
-@router.post('/', response_model=Response[response_models.Car])
+@router.post('', response_model=Response[response_models.Car])
 async def create_car(car_info: CreateCar, user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = await CarHandler.create_car(
         db=db,

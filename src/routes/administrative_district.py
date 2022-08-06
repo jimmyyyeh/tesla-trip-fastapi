@@ -28,7 +28,7 @@ router = APIRouter(prefix='/administrative-districts', tags=['administrative dis
 general_auth = AuthValidator()
 
 
-@router.get('/', response_model=Response[response_models.AdministrativeDistrict])
+@router.get('', response_model=Response[response_models.AdministrativeDistrict])
 async def get_administrative_district(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = await AdministrativeDistrictHandler.get_administrative_districts(db=db)
     return ResponseHandler.response(result=result)

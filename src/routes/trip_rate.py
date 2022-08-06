@@ -29,7 +29,7 @@ router = APIRouter(prefix='/trip-rates', tags=['trip rate'])
 general_auth = AuthValidator()
 
 
-@router.put('/', response_model=response_models.SuccessOrNot)
+@router.put('', response_model=response_models.SuccessOrNot)
 async def update_trip_rate(payload: UpdateTripRate, user: dict = Depends(general_auth),
                            db: Session = Depends(DBHandler.get_db)):
     result = await TripRateHandler.update_user_trip_rate(

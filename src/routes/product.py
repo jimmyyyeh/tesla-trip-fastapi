@@ -34,7 +34,7 @@ charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 
 
 @router.get('/{product_id}', response_model=Response[response_models.Product])
-@router.get('/', response_model=Response[response_models.Product])
+@router.get('', response_model=Response[response_models.Product])
 async def get_product(product_id: int = None,
                       is_self: Optional[bool] = None,
                       charger_id: Optional[int] = None,
@@ -56,7 +56,7 @@ async def get_product(product_id: int = None,
     return ResponseHandler.response(result=result, pager=pager)
 
 
-@router.post('/', response_model=Response[response_models.Product])
+@router.post('', response_model=Response[response_models.Product])
 async def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
                          db: Session = Depends(DBHandler.get_db)):
     result = await ProductHandler.create_product(
