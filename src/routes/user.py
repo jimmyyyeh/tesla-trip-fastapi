@@ -24,7 +24,7 @@ from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import Verify, ResendVerify, SignIn, SignUp, UpdateProfile, ResetPassword, \
     RequestResetPassword
-from utils.response_models import ResponseHandler
+from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(tags=['user'])
 general_auth = AuthValidator()
@@ -50,7 +50,7 @@ async def resend_verify(payload: ResendVerify, background_tasks: BackgroundTasks
     return ResponseHandler.response(result=result)
 
 
-@router.post('/sign-in', response_model=response_models.SignIn)
+@router.post('/sign-in', response_model=Response[response_models.SignIn])
 async def sign_in(payload: SignIn, db: Session = Depends(DBHandler.get_db)):
     result = await UserHandler.sign_in(
         db=db,
@@ -59,7 +59,7 @@ async def sign_in(payload: SignIn, db: Session = Depends(DBHandler.get_db)):
     return ResponseHandler.response(result=result)
 
 
-@router.post('/sign-up', response_model=response_models.SignUp)
+@router.post('/sign-up', response_model=Response[response_models.SignUp])
 async def sign_up(payload: SignUp, background_tasks: BackgroundTasks, db: Session = Depends(DBHandler.get_db)):
     result = await UserHandler.sign_up(
         db=db,
@@ -92,12 +92,12 @@ async def reset_password(payload: ResetPassword, db: Session = Depends(DBHandler
     return ResponseHandler.response(result=result)
 
 
-@router.get('/profile', response_model=response_models.UserBase)
+@router.get('/profile', response_model=Response[response_models.UserBase])
 def get_profile(user: dict = Depends(general_auth)):
     return user
 
 
-@router.put('/profile', response_model=response_models.SignIn)
+@router.put('/profile', response_model=Response[response_models.SignIn])
 async def update_profile(profile: UpdateProfile,
                          user: dict = Depends(general_auth),
                          db: Session = Depends(DBHandler.get_db)):

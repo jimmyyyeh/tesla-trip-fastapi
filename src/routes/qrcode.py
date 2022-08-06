@@ -23,13 +23,13 @@ from database.db_handler import DBHandler
 from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.payload_schemas import EncodeProduct
-from utils.response_models import ResponseHandler
+from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/qrcode', tags=['qrcode'])
 general_auth = AuthValidator()
 
 
-@router.get('/product/{token}', response_model=response_models.DecodeProduct)
+@router.get('/product/{token}', response_model=Response[response_models.DecodeProduct])
 async def decode_product(token: str, user: dict = Depends(general_auth)):
     result = await QRCodeHandler.decode_product(
         token=token
@@ -37,7 +37,7 @@ async def decode_product(token: str, user: dict = Depends(general_auth)):
     return ResponseHandler.response(result=result)
 
 
-@router.post('/product', response_model=response_models.EncodeProduct)
+@router.post('/product', response_model=Response[response_models.EncodeProduct])
 async def encode_product(payload: EncodeProduct, user: dict = Depends(general_auth),
                          db: Session = Depends(DBHandler.get_db)):
     result = await QRCodeHandler.encode_product(

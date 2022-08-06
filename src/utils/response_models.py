@@ -16,11 +16,14 @@
 """
 
 from datetime import date
-from fastapi import status
-from fastapi.responses import JSONResponse, ORJSONResponse
-from typing import Optional, List, Dict, Union
-from pydantic import BaseModel, EmailStr
+from typing import Optional, List, Dict, Union, Generic, TypeVar
 
+from fastapi import status
+from fastapi.responses import ORJSONResponse
+from pydantic import BaseModel, EmailStr
+from pydantic.generics import GenericModel
+
+DataT = TypeVar('DataT')
 
 class SuccessOrNot(BaseModel):
     success: bool
@@ -196,6 +199,11 @@ class Trip(BaseModel):
 class Error(BaseModel):
     error_msg: str
     error_code: int
+
+
+class Response(GenericModel, Generic[DataT]):
+    data: DataT
+    pager: Pager
 
 
 class ResponseHandler:

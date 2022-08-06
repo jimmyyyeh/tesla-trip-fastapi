@@ -26,15 +26,15 @@ from utils import response_models
 from utils.auth_tools import AuthValidator
 from utils.const import Const
 from utils.payload_schemas import CreateProduct, UpdateProduct
-from utils.response_models import ResponseHandler
+from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/products', tags=['product'])
 general_auth = AuthValidator()
 charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 
 
-@router.get('/{product_id}', response_model=response_models.Product)
-@router.get('/', response_model=response_models.Product)
+@router.get('/{product_id}', response_model=Response[response_models.Product])
+@router.get('/', response_model=Response[response_models.Product])
 async def get_product(product_id: int = None,
                       is_self: Optional[bool] = None,
                       charger_id: Optional[int] = None,
@@ -56,7 +56,7 @@ async def get_product(product_id: int = None,
     return ResponseHandler.response(result=result, pager=pager)
 
 
-@router.post('/', response_model=response_models.Product)
+@router.post('/', response_model=Response[response_models.Product])
 async def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
                          db: Session = Depends(DBHandler.get_db)):
     result = await ProductHandler.create_product(
@@ -70,7 +70,7 @@ async def create_product(product: CreateProduct, user: dict = Depends(charger_ow
     return ResponseHandler.response(result=result)
 
 
-@router.put('/{product_id}', response_model=response_models.Product)
+@router.put('/{product_id}', response_model=Response[response_models.Product])
 def update_product(product_id: int, product: UpdateProduct, user: dict = Depends(charger_owner_auth),
                    db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.update_product(
