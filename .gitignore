@@ -1,14 +1,21 @@
+# ide or system
 .DS_Store
-.Python
 .idea/
 .vscode/
 *.pyc
-tmp.*
 __pycache__
-tmp/
-supervisord.pid
+
+# log
 *log
-**test**
-*.exe
-.env
+
+# test
+test.*
+
+# large files
 **/static/**
+
+# env
+.env
+
+# exclude
+!**/test/**
