@@ -35,7 +35,7 @@ class SignUp(BaseModel):
     password: str
     nickname: Optional[str] = None
     email: EmailStr
-    birthday: str
+    birthday: date
     sex: int
 
     @validator('sex')
