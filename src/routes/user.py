@@ -47,7 +47,7 @@ async def resend_verify(payload: ResendVerify, background_tasks: BackgroundTasks
         username=payload.username
     )
     background_tasks.add_task(func=UserHandler.send_verify_mail, id_=result['id'], email=result['email'])
-    return ResponseHandler.response(result=result)
+    return ResponseHandler.response(result=bool(result))
 
 
 @router.post('/sign-in', response_model=Response[response_models.SignIn])
@@ -78,7 +78,7 @@ async def request_reset_password(payload: RequestResetPassword,
         email=payload.email
     )
     background_tasks.add_task(func=UserHandler.send_reset_password_mail, id_=result['id'], email=result['email'])
-    return ResponseHandler.response(result=result)
+    return ResponseHandler.response(result=bool(result))
 
 
 @router.post('/reset-password', response_model=response_models.SuccessOrNot)
