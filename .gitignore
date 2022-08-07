@@ -10,6 +10,8 @@ __pycache__
 
 # test
 test.*
+!**/test/*.py
+*test.db
 
 # large files
 **/static/**
@@ -17,5 +19,5 @@ test.*
 # env
 .env
 
-# exclude
-!**/test/**
+# coverage
+.coverage

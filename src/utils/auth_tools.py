@@ -33,7 +33,7 @@ class AuthTools:
     _PWD_CONTEXT = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
     @staticmethod
-    def create_access_token(data, expires_delta=None):
+    def create_access_token(data:dict, expires_delta:timedelta =None):
         encode_data = data.copy()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
