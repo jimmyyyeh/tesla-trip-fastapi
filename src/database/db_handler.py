@@ -14,6 +14,7 @@
         ┗┻┛    ┗┻┛
     God Bless,Never Bug
 """
+
 from datetime import date, datetime, timedelta
 from typing import Optional
 
@@ -64,7 +65,7 @@ class DBHandler:
         return user
 
     @staticmethod
-    def create_user(db: Session, username: str, password: str, nickname: str, email: EmailStr, birthday: str, sex: int):
+    def create_user(db: Session, username: str, password: str, nickname: str, email: EmailStr, birthday: date, sex: int):
         user = User(
             username=username,
             password=AuthTools.get_password_hash(password=password),
