@@ -21,12 +21,11 @@ from sqlalchemy.orm import Session
 from core.car_handler import CarHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthValidator
+from utils.auth_tools import general_auth
 from utils.payload_schemas import CreateCar, UpdateCar
 from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/cars', tags=['car'])
-general_auth = AuthValidator()
 
 
 @router.get('/{car_id}', response_model=Response[response_models.Car])

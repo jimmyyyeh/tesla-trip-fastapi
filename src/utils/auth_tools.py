@@ -24,6 +24,7 @@ from jose.exceptions import JWTError
 from passlib.context import CryptContext
 
 from app import settings
+from utils.const import Const
 from utils.error_codes import ErrorCodes
 from utils.errors import AuthException
 
@@ -73,3 +74,6 @@ class AuthValidator(HTTPBearer):
                 error_msg='token invalidate',
                 error_code=ErrorCodes.TOKEN_INVALIDATE
             )
+
+general_auth = AuthValidator()
+charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])

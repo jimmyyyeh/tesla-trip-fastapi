@@ -23,14 +23,11 @@ from sqlalchemy.orm import Session
 from core.product_handler import ProductHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthValidator
-from utils.const import Const
+from utils.auth_tools import general_auth, charger_owner_auth
 from utils.payload_schemas import CreateProduct, UpdateProduct
 from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/products', tags=['product'])
-general_auth = AuthValidator()
-charger_owner_auth = AuthValidator(roles=[Const.Role.CHARGER_OWNER])
 
 
 @router.get('/{product_id}', response_model=Response[response_models.Product])

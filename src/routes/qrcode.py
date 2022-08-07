@@ -21,12 +21,11 @@ from sqlalchemy.orm import Session
 from core.qrcode_handler import QRCodeHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthValidator
+from utils.auth_tools import general_auth
 from utils.payload_schemas import EncodeProduct
 from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/qrcode', tags=['qrcode'])
-general_auth = AuthValidator()
 
 
 @router.get('/product/{token}', response_model=Response[response_models.DecodeProduct])

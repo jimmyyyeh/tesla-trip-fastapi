@@ -23,12 +23,11 @@ from sqlalchemy.orm import Session
 from core.trip_handler import TripHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthValidator
+from utils.auth_tools import general_auth
 from utils.payload_schemas import CreateTrip
 from utils.response_models import Response, ResponseHandler
 
 router = APIRouter(prefix='/trips', tags=['trip'])
-general_auth = AuthValidator()
 
 
 @router.get('', response_model=Response[response_models.Trip])

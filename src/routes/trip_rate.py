@@ -21,12 +21,11 @@ from sqlalchemy.orm import Session
 from core.trip_rate_handler import TripRateHandler
 from database.db_handler import DBHandler
 from utils import response_models
-from utils.auth_tools import AuthValidator
+from utils.auth_tools import general_auth
 from utils.payload_schemas import UpdateTripRate
-from utils.response_models import Response, ResponseHandler
+from utils.response_models import ResponseHandler
 
 router = APIRouter(prefix='/trip-rates', tags=['trip rate'])
-general_auth = AuthValidator()
 
 
 @router.put('', response_model=response_models.SuccessOrNot)
