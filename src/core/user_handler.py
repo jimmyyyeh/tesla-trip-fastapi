@@ -23,7 +23,6 @@ from sqlalchemy.orm import Session
 
 from app import settings
 from database.db_handler import DBHandler
-from database.models import User
 from database.redis_handler import RedisHandler
 from utils.auth_tools import AuthTools
 from utils.error_codes import ErrorCodes
@@ -88,8 +87,14 @@ class UserHandler:
                 """
         await cls._send_email(subject='Tesla Trip 重設密碼信件', email=email, html=html)
 
-    @staticmethod
-    def _validate_user(payload: SignIn, user: User):
+    @classmethod
+    async def sign_in(cls, db: Session, payload: SignIn):
+        user = DBHandler.get_user_by_username(db=db, username=payload.username)
+        if not user:
+            raise AuthException(
+                error_msg='user does not exist',
+                error_code=ErrorCodes.USER_NOT_EXISTS
+            )
         validated = AuthTools.verify_password(password=payload.password, hashed_password=user.password)
         if not validated:
             raise AuthException(
@@ -101,16 +106,6 @@ class UserHandler:
                 error_msg='user unverified',
                 error_code=ErrorCodes.USER_UNVERIFIED
             )
-
-    @classmethod
-    async def sign_in(cls, db: Session, payload: SignIn):
-        user = DBHandler.get_user_by_username(db=db, username=payload.username)
-        if not user:
-            raise AuthException(
-                error_msg='user does not exist',
-                error_code=ErrorCodes.USER_NOT_EXISTS
-            )
-        cls._validate_user(payload=payload, user=user)
         result = {
             'id': user.id,
             'username': user.username,
