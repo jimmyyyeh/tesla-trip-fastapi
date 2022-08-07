@@ -96,7 +96,7 @@ def request_validation_exception_handler(request, exc):
     return JSONResponse(content=make_error_schema(
         error_msg='parameter error',
         error_code=ErrorCodes.PARAMETER_ERROR,
-    ), status_code=status.HTTP_401_UNAUTHORIZED)
+    ), status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @app.exception_handler(ValidationError)
