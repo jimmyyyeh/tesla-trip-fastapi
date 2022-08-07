@@ -25,6 +25,7 @@ from pydantic.generics import GenericModel
 
 DataT = TypeVar('DataT')
 
+
 class SuccessOrNot(BaseModel):
     success: bool
 
@@ -50,23 +51,13 @@ class UserBase(BaseModel):
     charger_id: Union[int, None]
 
 
-class SignUpBase(UserBase):
+class SignUp(UserBase):
     ...
 
 
-class SignUp(BaseModel):
-    data: SignUpBase
-    pager: Optional[Pager] = None
-
-
-class SignInBase(UserBase):
+class SignIn(UserBase):
     access_token: str
     token_type: str
-
-
-class SignIn(BaseModel):
-    data: SignInBase
-    pager: Optional[Pager] = None
 
 
 ### administrative district ###
@@ -203,7 +194,7 @@ class Error(BaseModel):
 
 class Response(GenericModel, Generic[DataT]):
     data: DataT
-    pager: Pager
+    pager: Optional[Pager] = None
 
 
 class ResponseHandler:
