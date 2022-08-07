@@ -107,11 +107,12 @@ redis_instance = redis.StrictRedis(
     host=settings.redis_host,
     password=settings.redis_password,
     port=settings.redis_port,
-    charset='utf-8',
+    encoding='utf-8',
     decode_responses=True,
 )
 
 url = f'mysql+pymysql://' \
       f'{settings.mysql_user}:%s@{settings.mysql_host}:{settings.mysql_port}/{settings.db_name}' \
       % quote(settings.mysql_password)
+
 engine = create_engine(url=url)
