@@ -29,7 +29,6 @@ from utils.const import Const
 
 engine = create_engine(url='sqlite:///test/test.db?check_same_thread=False')
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base.metadata.create_all(bind=engine)
 
 
 class TestBase:
@@ -78,6 +77,7 @@ class TestBase:
         return user
 
     def setup_class(self):
+        Base.metadata.create_all(bind=engine)
         app.dependency_overrides[general_auth] = self.override_general_auth
         app.dependency_overrides[DBHandler.get_db] = self.override_get_db
 
