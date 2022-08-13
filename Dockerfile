@@ -16,5 +16,5 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 RUN rm requirements.txt
 
 RUN echo 'alias start="uvicorn start_api:app --reload --host 0.0.0.0 --port 5000"' >> /root/.bashrc
-RUN echo 'alias test="pytest --capture=tee-sys ./test --cov=./test"' >> /root/.bashrc
+RUN echo 'alias test="pytest --capture=tee-sys ./test --cov --cov-report term-missing"' >> /root/.bashrc
 
