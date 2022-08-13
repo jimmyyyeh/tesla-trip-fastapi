@@ -92,12 +92,12 @@ class DBHandler:
 
     ### car ###
     @staticmethod
-    def get_car(db: Session, user_id: int, car_id: Optional[int] = None):
+    def get_car(db: Session, user_id: int, car_id: Optional[int] = None, is_object=False):
         car = db.query(Car).filter(
             Car.id == car_id,
             Car.user_id == user_id
         )
-        return car
+        return car.first() if is_object else car
 
     @staticmethod
     def get_cars(db: Session, user_id: int, car_id: Optional[int] = None):
@@ -106,7 +106,8 @@ class DBHandler:
         ]
         if car_id:
             filter_.append(Car.id == car_id)
-        car = db.query(
+
+        cars = db.query(
             Car.id,
             Car.manufacture_date,
             Car.has_image,
@@ -116,8 +117,8 @@ class DBHandler:
             CarModel, CarModel.id == Car.car_model_id
         ).filter(
             *filter_
-        )
-        return car
+        ).all()
+        return cars
 
     @staticmethod
     def create_car(db: Session, user_id: int, car_model_id: int, manufacture_date: date, file: Optional[str] = None):
@@ -141,7 +142,10 @@ class DBHandler:
         car_models = db.query(CarModel).filter(
             *filter_
         )
-        return car_models
+        if model and spec:
+            return car_models.first()
+        else:
+            return car_models
 
     ### log ###
 

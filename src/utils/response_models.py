@@ -92,19 +92,13 @@ class SuperCharger(BaseModel):
 
 
 ### car
-class CarBase(BaseModel):
+class Car(BaseModel):
     id: int
     car: Optional[str] = None
     model: str
     spec: str
-    manufacture_date: date
+    manufacture_date: Union[date, str]
     has_image: bool
-
-
-class Car(BaseModel):
-    data: Union[List[CarBase], CarBase]
-    pager: Optional[Pager] = None
-
 
 class CarModelBase(BaseModel):
     id: int
@@ -117,13 +111,8 @@ class CarModel(BaseModel):
     pager: Optional[Pager] = None
 
 
-class CarDeductPointBase(BaseModel):
-    total: int
-
-
 class CarDeductPoint(BaseModel):
-    data: CarDeductPointBase
-    pager: Optional[Pager] = None
+    total: int
 
 
 ### product ###
@@ -193,7 +182,7 @@ class Error(BaseModel):
 
 
 class Response(GenericModel, Generic[DataT]):
-    data: DataT
+    data: Optional[DataT]
     pager: Optional[Pager] = None
 
 

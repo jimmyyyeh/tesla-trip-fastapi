@@ -23,7 +23,6 @@ from pytest_mock.plugin import MockerFixture
 from app import create_app
 from routes import user
 from utils.response_models import Response, SignIn, SignUp, SuccessOrNot, UserBase
-from utils.test_base import TestBase
 
 app = create_app()
 app.include_router(user.router)
@@ -31,8 +30,7 @@ app.include_router(user.router)
 client = TestClient(app)
 
 
-class TestUser(TestBase):
-
+class TestUser:
     def test_sign_up(self, user_info: dict):
         response = client.post('/sign-up', json=user_info)
         assert response.status_code == 200

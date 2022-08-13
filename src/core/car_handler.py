@@ -34,7 +34,7 @@ class CarHandler:
 
     @classmethod
     async def get_cars(cls, db: Session, user_id: int, car_id: int):
-        cars = DBHandler.get_cars(db=db, user_id=user_id, car_id=car_id).all()
+        cars = DBHandler.get_cars(db=db, user_id=user_id, car_id=car_id)
         if not cars:
             raise NotFoundException(
                 error_msg='data not found',
@@ -52,7 +52,8 @@ class CarHandler:
             }
             Tools.serialize_result(dict_=result)
             results.append(result)
-        return results
+
+        return results[0] if car_id else results
 
     @staticmethod
     def _save_file(id_: int, file: str):
@@ -68,8 +69,7 @@ class CarHandler:
 
     @classmethod
     async def create_car(cls, db: Session, user_id: int, model: str, spec: str, manufacture_date: date, file: str):
-        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
-
+        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec)
         if not car_model:
             raise NotFoundException(
                 error_msg='data not found',
@@ -96,19 +96,18 @@ class CarHandler:
 
     @classmethod
     async def update_car(cls, db: Session, user_id: int, car_id: int, model: str, spec: str, manufacture_date: date):
-        car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id).first()
+        car = DBHandler.get_car(db=db, user_id=user_id, car_id=car_id, is_object=True)
         if not car:
             raise NotFoundException(
                 error_msg='data not found',
                 error_code=ErrorCodes.DATA_NOT_FOUND
             )
-        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec).first()
+        car_model = DBHandler.get_car_models(db=db, model=model, spec=spec)
         if not car_model:
             raise NotFoundException(
                 error_msg='data not found',
                 error_code=ErrorCodes.DATA_NOT_FOUND
             )
-
         car.car_model_id = car_model.id
         car.manufacture_date = manufacture_date
         db.add(car)
