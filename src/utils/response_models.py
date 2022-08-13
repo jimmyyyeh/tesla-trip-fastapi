@@ -62,18 +62,13 @@ class SignIn(UserBase):
 
 ### administrative district ###
 
-class AdministrativeDistrictBase(BaseModel):
+class AdministrativeDistrict(BaseModel):
     id: int
     area: str
 
 
-class AdministrativeDistrict(BaseModel):
-    data: Dict[str, List[AdministrativeDistrictBase]]
-    pager: Optional[Pager] = None
-
-
 ### super charger
-class SuperChargerBase(BaseModel):
+class SuperCharger(BaseModel):
     id: int
     name: str
     city: str
@@ -86,11 +81,6 @@ class SuperChargerBase(BaseModel):
     version: Optional[str] = None
 
 
-class SuperCharger(BaseModel):
-    data: List[SuperChargerBase]
-    pager: Optional[Pager] = None
-
-
 ### car
 class Car(BaseModel):
     id: int
@@ -100,15 +90,11 @@ class Car(BaseModel):
     manufacture_date: Union[date, str]
     has_image: bool
 
-class CarModelBase(BaseModel):
+
+class CarModel(BaseModel):
     id: int
     model: str
     spec: str
-
-
-class CarModel(BaseModel):
-    data: CarModelBase
-    pager: Optional[Pager] = None
 
 
 class CarDeductPoint(BaseModel):
@@ -116,7 +102,7 @@ class CarDeductPoint(BaseModel):
 
 
 ### product ###
-class ProductBase(BaseModel):
+class Product(BaseModel):
     id: int
     name: str
     stock: int
@@ -124,35 +110,19 @@ class ProductBase(BaseModel):
     is_launched: bool
 
 
-class Product(BaseModel):
-    data: List[ProductBase]
-    pager: Optional[Pager] = None
-
-
 ### qrcode ###
-class DecodeProductBase(BaseModel):
+class DecodeProduct(BaseModel):
     id: int
     name: str
     user_id: int
     point: int
 
-
-class DecodeProduct(BaseModel):
-    data: DecodeProductBase
-    pager: Optional[Pager] = None
-
-
-class EncodeProductBase(BaseModel):
+class EncodeProduct(BaseModel):
     image: str
 
 
-class EncodeProduct(BaseModel):
-    data: EncodeProductBase
-    pager: Optional[Pager] = None
-
-
 ### trip ###
-class TripBase(BaseModel):
+class Trip(BaseModel):
     id: int
     mileage: int
     consumption: Union[int, float]
@@ -169,11 +139,6 @@ class TripBase(BaseModel):
     charge: Optional[int] = None
     charger: Optional[str] = None
     fee: Optional[int] = None
-
-
-class Trip(BaseModel):
-    data: List[TripBase]
-    pager: Optional[Pager] = None
 
 
 class Error(BaseModel):

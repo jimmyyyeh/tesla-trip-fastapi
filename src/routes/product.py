@@ -15,7 +15,7 @@
     God Bless,Never Bug
 """
 
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -30,7 +30,7 @@ from utils.response_models import Response, ResponseHandler
 router = APIRouter(prefix='/products', tags=['product'])
 
 
-@router.get('/{product_id}', response_model=Response[response_models.Product])
+@router.get('/{product_id}', response_model=Response[List[response_models.Product]])
 @router.get('', response_model=Response[response_models.Product])
 async def get_product(product_id: int = None,
                       is_self: Optional[bool] = None,
@@ -53,7 +53,7 @@ async def get_product(product_id: int = None,
     return ResponseHandler.response(result=result, pager=pager)
 
 
-@router.post('', response_model=Response[response_models.Product])
+@router.post('', response_model=Response[List[response_models.Product]])
 async def create_product(product: CreateProduct, user: dict = Depends(charger_owner_auth),
                          db: Session = Depends(DBHandler.get_db)):
     result = await ProductHandler.create_product(
@@ -67,7 +67,7 @@ async def create_product(product: CreateProduct, user: dict = Depends(charger_ow
     return ResponseHandler.response(result=result)
 
 
-@router.put('/{product_id}', response_model=Response[response_models.Product])
+@router.put('/{product_id}', response_model=Response[List[response_models.Product]])
 def update_product(product_id: int, product: UpdateProduct, user: dict = Depends(charger_owner_auth),
                    db: Session = Depends(DBHandler.get_db)):
     result = ProductHandler.update_product(

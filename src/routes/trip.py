@@ -30,7 +30,7 @@ from utils.response_models import Response, ResponseHandler
 router = APIRouter(prefix='/trips', tags=['trip'])
 
 
-@router.get('', response_model=Response[response_models.Trip])
+@router.get('', response_model=Response[List[response_models.Trip]])
 async def get_trip(is_my_trip: Optional[bool] = None, page: Optional[int] = 1, per_page: Optional[int] = 10,
                    charger: Optional[str] = None, start: Optional[str] = None, end: Optional[str] = None,
                    model: Optional[str] = None, spec: Optional[str] = None, user: dict = Depends(general_auth),
