@@ -16,6 +16,7 @@
 """
 
 import os
+from datetime import datetime
 from random import choice
 
 import pytest
@@ -46,7 +47,7 @@ def override_general_auth():
         'id': 1,
         'username': 'jimmy',
         'nickname': 'jimmy is not nick',
-        'birthday': '1996-07-19',
+        'birthday': datetime(1996, 7, 19).date(),
         'sex': Const.Sex.MALE,
         'email': 'jimmy@gmail.com',
         'point': 0,
@@ -75,7 +76,7 @@ def user_info(request):
         'password': '1234567890',
         'nickname': 'jimmy not nick',
         'email': 'chienfeng0719@hotmail.com',
-        'birthday': '1996-07-19',
+        'birthday': datetime(1996, 7, 19).date(),
         'sex': choice(list(Const.Sex.get_elements())),
     }
     return user_info

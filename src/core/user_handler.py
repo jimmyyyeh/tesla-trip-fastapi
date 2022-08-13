@@ -140,6 +140,7 @@ class UserHandler:
             birthday=payload.birthday,
             sex=payload.sex
         )
+
         result = {
             'id': user.id,
             'username': user.username,
@@ -152,6 +153,7 @@ class UserHandler:
             'role': user.role,
             'charger_id': user.charger_id,
         }
+        Tools.serialize_result(dict_=result)
         return result
 
     @staticmethod
@@ -246,7 +248,6 @@ class UserHandler:
             user.nickname = nickname
         if email:
             user.email = email
-        db.add(user)
         db.commit()
         result = {
             'id': user.id,
