@@ -25,7 +25,8 @@ from database.db_handler import DBHandler
 from database.models import Base
 from utils.auth_tools import general_auth
 
-engine = create_engine(url='sqlite:///test/test.db?check_same_thread=False')
+db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'test/test.db')
+engine = create_engine(url=f'sqlite:///{db_path}?check_same_thread=False')
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -69,4 +70,4 @@ class TestBase:
 
     @staticmethod
     def teardown_class():
-        os.remove('./test/test.db')
+        os.remove(db_path)
