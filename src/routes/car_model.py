@@ -27,7 +27,7 @@ from utils.response_models import Response, ResponseHandler
 router = APIRouter(prefix='/car-models', tags=['car'])
 
 
-@router.get('/car-models', response_model=Response[response_models.CarModel])
+@router.get('/', response_model=Response[response_models.CarModel])
 async def get_car_model(user: dict = Depends(general_auth), db: Session = Depends(DBHandler.get_db)):
     result = await CarModelHandler.get_car_models(
         db=db
