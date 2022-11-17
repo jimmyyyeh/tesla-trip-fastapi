@@ -8,7 +8,7 @@ services:
     container_name: tesla_trip_api
     image: tesla-trip-fastapi
     volumes:
-      - ./src:/app:rw
+      - ./:/app:rw
       - ~/image:/app/static/image
     env_file: .env
     networks:
