@@ -4,7 +4,7 @@ LABEL maintainer="Jimmy chienfeng0719@hotmail.com"
 
 ARG WORKDIR="app"
 RUN apt-get update
-RUN apt-get install -y tzdata bash g++ gcc screen vim python3-dev
+RUN apt-get install -y tzdata bash g++ gcc screen vim python3-dev git
 
 ENV TZ=Asia/Taipei
 
